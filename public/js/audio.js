@@ -24,6 +24,15 @@ class AmbientSoundEngine {
     this.visualizerCanvas = null;
     this.animFrameId = null;
 
+    this.currentPreset = 'eventide'; // 'eventide' | 'midnight' | 'cosmic'
+
+    // Preset configurations for base mood harmonics
+    this.presetMultipliers = {
+      eventide: 1.0,   // Standard pitch (coastal wind)
+      midnight: 0.75,  // Deep cello register (rain on window)
+      cosmic: 1.25     // Ethereal overtone space
+    };
+
     // Harmonic frequency maps for each mood (base Hz for 4-voice ambient pad)
     this.moodHarmonics = {
       HAPPY: [130.81, 196.00, 246.94, 329.63], // C3, G3, B3, E4 (Lush Cmaj9)
@@ -45,6 +54,15 @@ class AmbientSoundEngine {
       UNCERTAIN: 440
     };
   }
+
+  setPreset(presetName) {
+    if (!this.presetMultipliers[presetName]) return;
+    this.currentPreset = presetName;
+    if (this.isPlaying) {
+      this.transitionMood(this.currentMood);
+    }
+  }
+
 
   /**
    * Lazily initialize AudioContext on user interaction
@@ -230,12 +248,12 @@ class AmbientSoundEngine {
     }
 
     const targetMood = this.moodHarmonics[newMood] ? newMood : 'NEUTRAL';
-    if (targetMood === this.currentMood) return;
     this.currentMood = targetMood;
 
+    const mult = this.presetMultipliers[this.currentPreset] || 1.0;
     const now = this.ctx.currentTime;
-    const freqs = this.moodHarmonics[targetMood];
-    const cutoff = this.filterCutoffs[targetMood] || 440;
+    const freqs = this.moodHarmonics[targetMood].map(f => f * mult);
+    const cutoff = (this.filterCutoffs[targetMood] || 440) * (this.currentPreset === 'cosmic' ? 1.3 : (this.currentPreset === 'midnight' ? 0.8 : 1.0));
 
     // Smoothly glide oscillator frequencies over 3 seconds
     this.droneOscillators.forEach((osc, idx) => {
@@ -251,6 +269,7 @@ class AmbientSoundEngine {
     this.filterNode.frequency.setValueAtTime(this.filterNode.frequency.value, now);
     this.filterNode.frequency.exponentialRampToValueAtTime(cutoff, now + 3.0);
   }
+
 
   /**
    * Volume control

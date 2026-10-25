@@ -77,6 +77,7 @@ const el = {
   audioStatusIcon: document.getElementById('audioStatusIcon'),
   audioStatusLabel: document.getElementById('audioStatusLabel'),
   audioVolumeSlider: document.getElementById('audioVolumeSlider'),
+  soundPresetSelect: document.getElementById('soundPresetSelect'),
   audioWaveCanvas: document.getElementById('audioWaveCanvas'),
   openArchiveDrawerBtn: document.getElementById('openArchiveDrawerBtn'),
   openPrivacyModalBtn: document.getElementById('openPrivacyModalBtn'),
@@ -194,6 +195,8 @@ const el = {
   endingStoryMeta: document.getElementById('endingStoryMeta'),
   exportStoryTxtBtn: document.getElementById('exportStoryTxtBtn'),
   exportStoryMdBtn: document.getElementById('exportStoryMdBtn'),
+  copyShareCardBtn: document.getElementById('copyShareCardBtn'),
+  shareCardToast: document.getElementById('shareCardToast'),
   continueFromEndingBtn: document.getElementById('continueFromEndingBtn'),
   toggleEvolutionSummaryBtn: document.getElementById('toggleEvolutionSummaryBtn'),
   restartNewStoryBtn: document.getElementById('restartNewStoryBtn'),
@@ -202,7 +205,9 @@ const el = {
   evolutionSummarySection: document.getElementById('evolutionSummarySection'),
   evolutionAdaptationCount: document.getElementById('evolutionAdaptationCount'),
   evolutionTimelineList: document.getElementById('evolutionTimelineList'),
-  endingFullManuscript: document.getElementById('endingFullManuscript')
+  endingFullManuscript: document.getElementById('endingFullManuscript'),
+  narrativeArcCanvas: document.getElementById('narrativeArcCanvas'),
+  arcMoodDominance: document.getElementById('arcMoodDominance')
 };
 
 // ---------------------------------------------------------------------------
@@ -597,6 +602,9 @@ function showEndingScreen() {
   const adaptedCount = s.paragraphs.filter((p, idx) => idx > 0 && p.triggerExpression !== 'UNCERTAIN' && p.triggerExpression !== 'NEUTRAL').length;
   el.evolutionAdaptationCount.textContent = `${adaptedCount} Adaptive Narrative Shifts`;
 
+  // Draw Interactive Narrative Emotional Arc
+  drawNarrativeArc(s.paragraphs, el.narrativeArcCanvas, el.arcMoodDominance);
+
   el.evolutionTimelineList.innerHTML = s.paragraphs.map(p => `
     <div class="rounded-xl border border-ivory-300/10 bg-midnight-950/70 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div class="space-y-1">
@@ -620,6 +628,165 @@ function showEndingScreen() {
     <p class="${i === 0 ? 'drop-cap' : ''} leading-relaxed">${escapeHtml(p.text)}</p>
   `).join('');
 }
+
+/**
+ * Renders Kurt Vonnegut-style Narrative Emotional Arc Trajectory
+ */
+function drawNarrativeArc(paragraphs, canvas, dominanceEl) {
+  if (!canvas || !paragraphs || paragraphs.length === 0) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0, 0, w, h);
+
+  // Background grid
+  ctx.strokeStyle = 'rgba(230, 223, 209, 0.08)';
+  ctx.lineWidth = 1;
+  const gridLevels = [0.22 * h, 0.5 * h, 0.78 * h];
+  gridLevels.forEach(y => {
+    ctx.beginPath();
+    ctx.moveTo(55, y);
+    ctx.lineTo(w - 20, y);
+    ctx.stroke();
+  });
+
+  ctx.fillStyle = 'rgba(163, 154, 136, 0.6)';
+  ctx.font = '10px "JetBrains Mono", monospace';
+  ctx.fillText('Catharsis', 10, 0.22 * h + 3);
+  ctx.fillText('Baseline', 10, 0.5 * h + 3);
+  ctx.fillText('Tension', 10, 0.78 * h + 3);
+
+  const valenceMap = {
+    HAPPY: 0.24,
+    SURPRISED: 0.38,
+    NEUTRAL: 0.50,
+    OPENING: 0.50,
+    'OPENING SEED': 0.50,
+    SAD: 0.64,
+    FEAR: 0.74,
+    ANGRY: 0.80
+  };
+
+  const padLeft = 85;
+  const availableW = w - padLeft - 40;
+  const stepX = paragraphs.length > 1 ? availableW / (paragraphs.length - 1) : availableW / 2;
+
+  const points = paragraphs.map((p, i) => {
+    const x = padLeft + i * stepX;
+    const baseVal = valenceMap[p.triggerExpression] || 0.50;
+    const intensityOffset = ((p.intensity || 0.6) - 0.5) * 0.18;
+    const normY = Math.max(0.18, Math.min(0.85, baseVal + intensityOffset));
+    return { x, y: normY * h, p };
+  });
+
+  // Calculate arc dominance
+  const counts = {};
+  paragraphs.forEach(p => {
+    if (p.triggerExpression && p.triggerExpression !== 'OPENING' && p.triggerExpression !== 'OPENING SEED') {
+      counts[p.triggerExpression] = (counts[p.triggerExpression] || 0) + 1;
+    }
+  });
+  let topExpr = 'NEUTRAL';
+  let topC = 0;
+  for (const [k, v] of Object.entries(counts)) {
+    if (v > topC) { topC = v; topExpr = k; }
+  }
+  const labelMap = {
+    HAPPY: 'Arc: Luminous Catharsis',
+    SAD: 'Arc: Poignant Solace',
+    SURPRISED: 'Arc: Atmospheric Revelation',
+    FEAR: 'Arc: Shadowed Suspense',
+    ANGRY: 'Arc: Cathartic Defiance',
+    NEUTRAL: 'Arc: Contemplative Stillness'
+  };
+  if (dominanceEl) {
+    dominanceEl.textContent = labelMap[topExpr] || 'Arc: Luminous Catharsis';
+  }
+
+  // Draw Spline
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i];
+    const p1 = points[i + 1];
+    const midX = (p0.x + p1.x) / 2;
+    ctx.bezierCurveTo(midX, p0.y, midX, p1.y, p1.x, p1.y);
+  }
+
+  const grad = ctx.createLinearGradient(0, 0, w, 0);
+  grad.addColorStop(0, '#d49b43');
+  grad.addColorStop(0.5, '#9d84e8');
+  grad.addColorStop(1, '#10b981');
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 3.5;
+  ctx.stroke();
+
+  // Gradient fill under curve
+  ctx.lineTo(points[points.length - 1].x, h - 12);
+  ctx.lineTo(points[0].x, h - 12);
+  ctx.closePath();
+  const fillGrad = ctx.createLinearGradient(0, 0, 0, h);
+  fillGrad.addColorStop(0, 'rgba(212, 155, 67, 0.2)');
+  fillGrad.addColorStop(1, 'rgba(9, 9, 13, 0.0)');
+  ctx.fillStyle = fillGrad;
+  ctx.fill();
+
+  // Draw Nodes
+  points.forEach((pt) => {
+    const expr = pt.p.triggerExpression;
+    let color = '#d49b43';
+    if (expr === 'HAPPY') color = '#10b981';
+    else if (expr === 'SAD') color = '#60a5fa';
+    else if (expr === 'SURPRISED') color = '#9d84e8';
+    else if (expr === 'FEAR' || expr === 'ANGRY') color = '#f87171';
+
+    // Outer circle
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#09090d';
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Inner dot
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    // Section label
+    ctx.fillStyle = '#f3efe6';
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`§${pt.p.index}`, pt.x, pt.y - 12);
+  });
+}
+
+function copyStoryShareCard() {
+  const s = appState.story;
+  const excerpt = s.paragraphs[0]?.text ? s.paragraphs[0].text.slice(0, 140) : s.premise.slice(0, 140);
+  const cardText = `📖 "${s.title || 'EMOTIVE Story'}"
+An AI narrative that felt its reader's emotions in real time.
+
+• Genre: ${s.genre} (${s.style} style)
+• Length: ${s.paragraphs.length} Paragraphs
+• Opening: "${excerpt}..."
+
+Experience your own story with EMOTIVE:
+https://github.com/iamnih4l/Emotive`;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cardText).then(() => {
+      if (el.shareCardToast) {
+        el.shareCardToast.classList.remove('opacity-0');
+        setTimeout(() => el.shareCardToast.classList.add('opacity-0'), 2500);
+      }
+    });
+  }
+}
+
 
 // ---------------------------------------------------------------------------
 // ARCHIVE DRAWER
@@ -775,6 +942,12 @@ function attachEventListeners() {
     el.audioStatusLabel.textContent = isPlaying ? 'SOUND: ON' : 'SOUND: OFF';
     el.audioStatusIcon.className = `w-2 h-2 rounded-full ${isPlaying ? 'bg-amber-450 animate-pulse' : 'bg-ivory-400'}`;
   });
+
+  if (el.soundPresetSelect) {
+    el.soundPresetSelect.addEventListener('change', (e) => {
+      soundEngine.setPreset(e.target.value);
+    });
+  }
 
   el.audioVolumeSlider.addEventListener('input', () => {
     const vol = parseFloat(el.audioVolumeSlider.value);
@@ -1000,6 +1173,9 @@ function attachEventListeners() {
   // Ending Screen Actions
   el.exportStoryTxtBtn.addEventListener('click', () => exportStoryAsText(appState.story));
   el.exportStoryMdBtn.addEventListener('click', () => exportStoryAsMarkdown(appState.story));
+  if (el.copyShareCardBtn) {
+    el.copyShareCardBtn.addEventListener('click', copyStoryShareCard);
+  }
 
   el.continueFromEndingBtn.addEventListener('click', () => {
     appState.story.desiredLength += 3;

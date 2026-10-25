@@ -1,5 +1,10 @@
 # EMOTIVE — An AI Story That Feels Its Reader
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
+[![CI Verification](https://github.com/iamnih4l/Emotive/actions/workflows/ci.yml/badge.svg)](https://github.com/iamnih4l/Emotive/actions)
+[![Node.js](https://img.shields.io/badge/Node.js-18%20%7C%2020%20%7C%2022-emerald.svg)](https://nodejs.org/)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fiamnih4l%2FEmotive&env=GEMINI_API_KEY&envDescription=Google%20AI%20Studio%20Gemini%20API%20Key&envLink=https%3A%2F%2Faistudio.google.com%2Fapp%2Fapikey)
+
 > **An interactive storytelling experience powered by Google Gemini that generates narratives one paragraph at a time, dynamically adapting prose, atmosphere, tone, and pacing based on local, browser-side facial expression cues and procedural ambient soundscapes.**
 
 ---
@@ -13,20 +18,24 @@
   - Built-in **Exponential Moving Average (EMA)** temporal smoothing, **Hysteresis (±9%)**, and an **Adaptation Cooldown** prevent erratic plot oscillations.
 
 - **Generative Ambient Soundscape Engine**:
-  - 100% self-contained procedural **Web Audio API** synthesizer.
+  - 100% self-contained procedural **Web Audio API** synthesizer with 3 presets (*Eventide Harbor*, *Midnight Archive*, *Cosmic Orbit*).
   - Features a 4-voice detuned harmonic pad and bandpass-filtered environmental noise (rain, coastal wind, vinyl warmth).
   - Smoothly crossfades harmonic chords and filter cutoffs in real time as the narrative mood shifts.
   - Interactive audio visualizer canvas in the telemetry sidebar.
+
+- **Interactive Emotional Arc Trajectory**:
+  - Visualizes the reader's Kurt Vonnegut-style narrative emotional curvature across paragraphs.
+  - Smooth bezier spline dynamically reflecting emotional tension, valence, and cathartic peaks.
 
 - **Tri-Tier Narrative Execution**:
   1. **Server Proxy**: Production-ready Express `/api/generate-paragraph` endpoint with rate limiting.
   2. **Direct Client Key**: Optional in-app Google AI Studio key configuration for client-side development.
   3. **Built-in Offline Engine**: Works out-of-the-box without an API key, branching dynamically based on user premise and emotion signals.
 
-- **Persistent Manuscript Archive**:
+- **Persistent Manuscript Archive & Share Cards**:
   - Auto-saves finished stories to `localStorage`.
   - Slide-over archive drawer to review past manuscripts and their emotional evolution maps.
-  - Multi-format export: Download as formatted `.TXT` or rich Markdown (`.MD`).
+  - Multi-format export: Download as formatted `.TXT`, rich Markdown (`.MD`), or 1-click **Share Story Card** for social media.
 
 ---
 

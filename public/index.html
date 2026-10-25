@@ -74,7 +74,12 @@
             <span id="audioStatusIcon" class="w-2 h-2 rounded-full bg-amber-450 animate-pulse"></span>
             <span id="audioStatusLabel" class="text-ivory-300 font-mono text-[11px] hidden sm:inline">SOUND: ON</span>
           </button>
-          <input id="audioVolumeSlider" type="range" min="0" max="1" step="0.05" value="0.55" class="w-12 sm:w-16 accent-amber-450 h-1 bg-midnight-950 rounded-lg cursor-pointer" title="Soundscape Volume" />
+          <select id="soundPresetSelect" class="bg-midnight-950 text-[10px] text-ivory-300 font-mono border border-ivory-300/10 rounded px-1.5 py-0.5 hover:border-amber-450/40 focus:outline-none cursor-pointer" title="Ambient Soundscape Palette">
+            <option value="eventide" selected>Eventide</option>
+            <option value="midnight">Midnight</option>
+            <option value="cosmic">Cosmic</option>
+          </select>
+          <input id="audioVolumeSlider" type="range" min="0" max="1" step="0.05" value="0.55" class="w-12 sm:w-14 accent-amber-450 h-1 bg-midnight-950 rounded-lg cursor-pointer" title="Soundscape Volume" />
         </div>
 
         <!-- Camera Privacy Status -->
@@ -642,6 +647,13 @@
             <span>Download .MD</span>
           </button>
 
+          <button id="copyShareCardBtn" type="button" class="px-4 py-2.5 rounded-xl border border-amber-450/40 bg-amber-450/10 hover:bg-amber-450/20 text-xs text-amber-350 transition-colors flex items-center gap-1.5" title="Copy formatted story card to share on social media or with friends">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            <span>Share Story Card</span>
+          </button>
+
           <button id="continueFromEndingBtn" type="button" class="px-4 py-2.5 rounded-xl border border-violet-450/30 hover:border-violet-450 text-xs text-violet-450 transition-colors">
             Continue Story (+3 §)
           </button>
@@ -655,9 +667,41 @@
           </button>
         </div>
 
-        <!-- Archive Saved Toast Notification -->
-        <div id="archiveSavedToast" class="opacity-0 transition-opacity duration-300 text-center text-xs font-mono text-emerald-400">
-          ✓ Manuscript saved to local persistent archive
+        <!-- Toast Notifications Container -->
+        <div class="space-y-1">
+          <div id="archiveSavedToast" class="opacity-0 transition-opacity duration-300 text-center text-xs font-mono text-emerald-400">
+            ✓ Manuscript saved to local persistent archive
+          </div>
+          <div id="shareCardToast" class="opacity-0 transition-opacity duration-300 text-center text-xs font-mono text-amber-350">
+            ✓ Formatted story card copied to clipboard! Ready to share.
+          </div>
+        </div>
+
+        <!-- Interactive Narrative Emotional Arc Trajectory -->
+        <div class="rounded-2xl border border-ivory-300/10 bg-midnight-900/40 p-6 space-y-4 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">
+                Emotional Arc Trajectory
+              </h4>
+              <p class="text-xs text-ivory-400 font-light mt-0.5">
+                Visualizing how your live emotional expressions shaped narrative tension, valence, and resolution.
+              </p>
+            </div>
+            <span id="arcMoodDominance" class="self-start sm:self-auto text-xs font-mono text-ivory-200 bg-midnight-950 px-2.5 py-1 rounded-lg border border-ivory-300/10">
+              Arc: Luminous Catharsis
+            </span>
+          </div>
+
+          <div class="relative w-full rounded-xl bg-midnight-950/80 p-3 border border-ivory-300/10 overflow-hidden">
+            <canvas id="narrativeArcCanvas" width="800" height="200" class="w-full h-auto block cursor-crosshair"></canvas>
+            <div class="flex items-center justify-between text-[10px] font-mono text-ivory-400 pt-2 border-t border-ivory-300/10">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Solace / Hope</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-450"></span> Warmth / Bittersweet</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-violet-450"></span> Intrigue / Revelation</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-400"></span> Tension / Agency</span>
+            </div>
+          </div>
         </div>
 
         <!-- Narrative Evolution Map Accordion -->
