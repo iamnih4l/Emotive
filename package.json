@@ -1,0 +1,16 @@
+{
+  "name": "emotive-adaptive-storytelling",
+  "version": "1.0.0",
+  "description": "EMOTIVE — An AI Story That Feels Its Reader. Adaptive storytelling with local facial-expression cues and Gemini narrative engine.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}

@@ -1,0 +1,160 @@
+/* ==========================================================================
+   EMOTIVE — Atmospheric Literary & Interaction Styling
+   ========================================================================== */
+
+:root {
+  --bg-primary: #09090d;
+  --bg-surface: #0f1016;
+  --bg-elevated: #14161f;
+  --bg-card: #1a1c28;
+  --border-subtle: rgba(230, 223, 209, 0.1);
+  --border-focus: rgba(212, 155, 67, 0.5);
+  --text-ivory: #fbf9f5;
+  --text-body: #f3efe6;
+  --text-muted: #a39a88;
+  --accent-amber: #d49b43;
+  --accent-amber-light: #e5b869;
+  --accent-violet: #8b72d6;
+  --accent-violet-light: #9d84e8;
+  --accent-emerald: #10b981;
+  --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--bg-primary);
+  color: var(--text-body);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  min-height: 100vh;
+}
+
+/* Ensure .hidden overrides any flex/grid styles */
+.hidden {
+  display: none !important;
+}
+
+
+/* Atmospheric Background Glow */
+.ambient-bg {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(212, 155, 67, 0.055) 0%, transparent 45%),
+    radial-gradient(circle at 82% 85%, rgba(139, 114, 214, 0.055) 0%, transparent 50%),
+    linear-gradient(180deg, #09090d 0%, #0d0e15 50%, #09090d 100%);
+  background-attachment: fixed;
+}
+
+/* Literary Prose Animation */
+@keyframes paragraphReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.paragraph-enter {
+  animation: paragraphReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+.evolving-pulse {
+  animation: pulseGlow 2.4s ease-in-out infinite;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090d;
+}
+::-webkit-scrollbar-thumb {
+  background: #26293a;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3e54;
+}
+
+/* Drop Cap for Opening Paragraph */
+.drop-cap::first-letter {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  float: left;
+  font-size: 3.8rem;
+  line-height: 0.82;
+  padding-top: 4px;
+  padding-right: 14px;
+  padding-bottom: 2px;
+  color: var(--accent-amber-light);
+  font-weight: 600;
+  text-shadow: 0 0 20px rgba(212, 155, 67, 0.3);
+}
+
+/* Reading Font Sizes */
+.reading-size-sm { font-size: 1.05rem; line-height: 1.85; }
+.reading-size-md { font-size: 1.22rem; line-height: 1.95; }
+.reading-size-lg { font-size: 1.40rem; line-height: 2.0; }
+.reading-size-xl { font-size: 1.60rem; line-height: 2.05; }
+
+/* Drawer Slide Transitions */
+.drawer-backdrop {
+  transition: opacity 0.3s ease;
+}
+.drawer-content {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.drawer-closed .drawer-backdrop {
+  opacity: 0;
+  pointer-events: none;
+}
+.drawer-closed .drawer-content {
+  transform: translateX(100%);
+}
+
+/* Glassmorphism Card Utilities */
+.glass-panel {
+  background: rgba(15, 16, 22, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-subtle);
+}
+
+.glass-panel-hover {
+  transition: var(--transition-smooth);
+}
+.glass-panel-hover:hover {
+  border-color: rgba(212, 155, 67, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Sound Waveform Visualizer Canvas */
+#audioWaveCanvas {
+  display: block;
+  width: 100%;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(9, 9, 13, 0.6);
+}

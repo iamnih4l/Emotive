@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMOTIVE — An AI Story That Feels Its Reader</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            midnight: {
+              950: '#09090d',
+              900: '#0f1016',
+              850: '#14161f',
+              800: '#1a1c28',
+              700: '#26293a'
+            },
+            ivory: {
+              50: '#fbf9f5',
+              100: '#f3efe6',
+              200: '#e6dfd1',
+              300: '#cfc5b1',
+              400: '#a39a88'
+            },
+            amber: {
+              350: '#e5b869',
+              450: '#d49b43',
+              550: '#b87d28'
+            },
+            violet: {
+              450: '#9d84e8',
+              550: '#7e63cf'
+            }
+          },
+          fontFamily: {
+            display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            serif: ['"Lora"', 'Georgia', 'serif'],
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="ambient-bg min-h-screen text-ivory-100 selection:bg-amber-450/30 selection:text-ivory-50 flex flex-col">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-30 border-b border-ivory-300/10 bg-midnight-950/85 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <button id="navHomeBtn" type="button" class="group flex items-center gap-2.5 text-left focus:outline-none" title="Return to Home">
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-450 group-hover:scale-125 transition-transform shadow-[0_0_12px_rgba(212,155,67,0.8)]"></span>
+          <span class="font-display text-2xl tracking-[0.22em] font-semibold text-ivory-50">EMOTIVE</span>
+        </button>
+        <span class="hidden md:inline-block text-xs text-ivory-400 border-l border-ivory-300/15 pl-3 font-light tracking-wide">
+          Adaptive Literary Engine
+        </span>
+      </div>
+
+      <!-- Header Controls: Soundscape, Camera Status, Archive Drawer, Settings -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Procedural Ambient Soundscape Controller -->
+        <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-full border border-ivory-300/15 bg-midnight-900/80 text-xs">
+          <button id="audioToggleBtn" type="button" class="flex items-center gap-1.5 hover:text-amber-350 transition-colors" title="Toggle Procedural Generative Soundscape">
+            <span id="audioStatusIcon" class="w-2 h-2 rounded-full bg-amber-450 animate-pulse"></span>
+            <span id="audioStatusLabel" class="text-ivory-300 font-mono text-[11px] hidden sm:inline">SOUND: ON</span>
+          </button>
+          <input id="audioVolumeSlider" type="range" min="0" max="1" step="0.05" value="0.55" class="w-12 sm:w-16 accent-amber-450 h-1 bg-midnight-950 rounded-lg cursor-pointer" title="Soundscape Volume" />
+        </div>
+
+        <!-- Camera Privacy Status -->
+        <div id="globalCameraBadge" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-ivory-300/15 bg-midnight-900 text-xs">
+          <span id="cameraStatusDot" class="w-2 h-2 rounded-full bg-ivory-400"></span>
+          <span id="cameraStatusLabel" class="text-ivory-300 font-mono text-[11px]">CAMERA: OFF</span>
+          <button id="quickCameraToggleBtn" type="button" class="ml-1 text-amber-350 hover:text-ivory-50 underline underline-offset-2 text-[11px] transition-colors">
+            Enable
+          </button>
+        </div>
+
+        <!-- Manuscript Archive Drawer Button -->
+        <button id="openArchiveDrawerBtn" type="button" class="px-2.5 py-1.5 rounded-lg border border-ivory-300/10 hover:border-amber-450/40 bg-midnight-900/70 text-ivory-300 hover:text-ivory-100 text-xs transition-colors flex items-center gap-1.5" title="View Saved Story Manuscripts">
+          <svg class="w-3.5 h-3.5 text-amber-350" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <span class="hidden sm:inline">Archive</span>
+        </button>
+
+        <!-- Privacy Architecture Modal Button -->
+        <button id="openPrivacyModalBtn" type="button" class="px-2.5 py-1.5 rounded-lg border border-ivory-300/10 hover:border-ivory-300/25 bg-midnight-900/70 text-ivory-300 hover:text-ivory-100 text-xs transition-colors flex items-center gap-1.5" title="Camera & Privacy Architecture">
+          <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span class="hidden sm:inline">Privacy</span>
+        </button>
+
+        <!-- Gemini API Engine Settings Modal Button -->
+        <button id="openEngineModalBtn" type="button" class="px-2.5 py-1.5 rounded-lg border border-ivory-300/10 hover:border-violet-450/40 bg-midnight-900/70 text-ivory-300 hover:text-ivory-100 text-xs transition-colors flex items-center gap-1.5" title="Configure Gemini Model & Connection">
+          <svg class="w-3.5 h-3.5 text-violet-450" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="hidden sm:inline">Gemini Config</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="flex-1 flex flex-col">
+
+    <!-- ==========================================
+         SCREEN 1: LANDING SCREEN
+         ========================================== -->
+    <section id="screenLanding" class="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 py-12 sm:py-20">
+      <div class="max-w-3xl mx-auto text-center space-y-8">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-amber-450/25 bg-amber-450/5 text-amber-350 text-xs tracking-widest uppercase">
+          <span>Interactive Literary Experience</span>
+        </div>
+
+        <div class="space-y-4">
+          <h1 class="font-display text-6xl sm:text-7xl md:text-8xl font-normal tracking-[0.18em] text-ivory-50">
+            EMOTIVE
+          </h1>
+          <p class="font-display italic text-2xl sm:text-3xl md:text-4xl text-amber-350/95 font-normal">
+            “Every story feels different when it feels you.”
+          </p>
+        </div>
+
+        <p class="max-w-xl mx-auto text-base sm:text-lg text-ivory-300 font-light leading-relaxed">
+          An adaptive storytelling experience where every new paragraph responds to the moment.
+          Instead of writing the entire narrative in advance, EMOTIVE crafts one paragraph at a time—observing subtle emotional cues as you read to shape the atmosphere, pacing, and revelations that follow.
+        </p>
+
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button id="landingStartBtn" type="button" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-amber-450 hover:bg-amber-350 text-midnight-950 font-medium tracking-wider uppercase text-sm transition-all shadow-[0_0_30px_rgba(212,155,67,0.25)] hover:shadow-[0_0_40px_rgba(212,155,67,0.45)] flex items-center justify-center gap-3">
+            <span>START YOUR STORY</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+
+          <button id="landingNoCameraBtn" type="button" class="w-full sm:w-auto px-6 py-4 rounded-xl border border-ivory-300/20 hover:border-ivory-300/40 bg-midnight-900/60 hover:bg-midnight-850 text-ivory-200 text-sm transition-all">
+            Continue Without Camera Access
+          </button>
+        </div>
+
+        <!-- Privacy Box -->
+        <div class="mt-12 max-w-2xl mx-auto text-left rounded-2xl border border-ivory-300/10 bg-midnight-900/50 p-6 sm:p-7 space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <h2 class="text-xs font-mono uppercase tracking-widest text-ivory-200">
+                Privacy-First Local Expression Analysis
+              </h2>
+            </div>
+            <span class="text-[11px] font-mono text-ivory-400">Zero Video Uploads</span>
+          </div>
+          <p class="text-xs sm:text-sm text-ivory-300/90 leading-relaxed font-light">
+            When you enable camera adaptation, facial-expression cues are analyzed <strong class="text-ivory-100 font-medium">entirely inside your browser</strong> using a lightweight local vision model (MediaPipe Face Landmarker &amp; FACS expression classifier). Raw video frames, images, or biometric templates never leave your device and are never stored.
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-ivory-300/10 text-xs text-ivory-400">
+            <div class="flex items-start gap-2">
+              <span class="text-amber-350 font-mono">01.</span>
+              <span>Local in-browser inference with temporal smoothing</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-amber-350 font-mono">02.</span>
+              <span>Only aggregated mood trends guide the next paragraph</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <span class="text-amber-350 font-mono">03.</span>
+              <span>Procedural audio soundscape shifts with emotion</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 2: STORY CONFIGURATION SCREEN
+         ========================================== -->
+    <section id="screenConfig" class="hidden flex-1 py-10 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto space-y-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-ivory-300/10 pb-6">
+          <div>
+            <p class="text-xs font-mono uppercase tracking-widest text-amber-350 mb-1">Narrative Setup</p>
+            <h2 class="font-display text-3xl sm:text-4xl text-ivory-50">Shape the Opening Horizon</h2>
+            <p class="text-sm text-ivory-400 font-light mt-1">
+              Configure your story parameters below, or launch immediately with a curated literary premise.
+            </p>
+          </div>
+          <button id="quickStartRandomBtn" type="button" class="self-start sm:self-auto px-4 py-2.5 rounded-xl border border-violet-450/40 bg-violet-450/10 hover:bg-violet-450/20 text-ivory-100 text-xs font-medium tracking-wide transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4 text-violet-450" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            <span>Quick-Start Random Story</span>
+          </button>
+        </div>
+
+        <form id="storyConfigForm" class="space-y-8" onsubmit="return false;">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-1 space-y-2">
+              <label for="cfgTitle" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">
+                Story Title <span class="text-ivory-400/60">(Optional)</span>
+              </label>
+              <input id="cfgTitle" type="text" placeholder="e.g., The Glass Observatory" class="w-full px-3.5 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 focus:outline-none text-sm text-ivory-100 placeholder:text-ivory-400/40" />
+              <p class="text-[11px] text-ivory-400">Leave blank to let the engine title the story.</p>
+            </div>
+
+            <div class="md:col-span-2 space-y-2">
+              <div class="flex items-center justify-between">
+                <label for="cfgPremise" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">
+                  Opening Premise or Seed
+                </label>
+                <button id="inspirePremiseBtn" type="button" class="text-[11px] text-amber-350 hover:underline">
+                  Cycle Sample Premise
+                </button>
+              </div>
+              <textarea id="cfgPremise" rows="3" class="w-full px-3.5 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 focus:outline-none text-sm text-ivory-100 leading-relaxed"></textarea>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="space-y-2">
+              <label for="cfgGenre" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">Genre</label>
+              <select id="cfgGenre" class="w-full px-3 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 text-sm text-ivory-100">
+                <option value="Mystery">Mystery</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Science Fiction">Science Fiction</option>
+                <option value="Psychological Thriller">Psychological Thriller</option>
+                <option value="Historical Fiction">Historical Fiction</option>
+                <option value="Gothic Romance">Gothic Romance</option>
+                <option value="Custom">Custom Genre...</option>
+              </select>
+              <input id="cfgCustomGenre" type="text" placeholder="Enter custom genre" class="hidden w-full mt-2 px-3 py-2 rounded-xl bg-midnight-950 border border-ivory-300/20 text-xs text-ivory-100" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="cfgStyle" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">Prose Style</label>
+              <select id="cfgStyle" class="w-full px-3 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 text-sm text-ivory-100">
+                <option value="Literary">Literary &amp; Atmospheric</option>
+                <option value="Cinematic">Cinematic &amp; Paced</option>
+                <option value="Poetic">Poetic &amp; Lyrical</option>
+                <option value="Minimalist">Minimalist &amp; Stark</option>
+              </select>
+            </div>
+
+            <div class="space-y-2">
+              <label for="cfgStartingMood" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">Starting Atmosphere</label>
+              <input id="cfgStartingMood" type="text" value="Wistful &amp; Mysterious" class="w-full px-3 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 text-sm text-ivory-100" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="cfgLength" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">Story Target Length</label>
+              <select id="cfgLength" class="w-full px-3 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 text-sm text-ivory-100">
+                <option value="5">Brief Arc (5 Paragraphs)</option>
+                <option value="8" selected>Standard Journey (8 Paragraphs)</option>
+                <option value="12">Extended Novella (12 Paragraphs)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+              <label for="cfgProtagonist" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">
+                Protagonist &amp; Core Motivation
+              </label>
+              <input id="cfgProtagonist" type="text" placeholder="e.g., Mira, an archivist seeking the truth behind a lost beacon" class="w-full px-3.5 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 text-sm text-ivory-100" />
+            </div>
+
+            <div class="space-y-2">
+              <label for="cfgBoundaries" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">
+                Atmospheric Boundaries / Themes
+              </label>
+              <input id="cfgBoundaries" type="text" placeholder="e.g., Coastal memory, quiet resilience, family letters" class="w-full px-3.5 py-2.5 rounded-xl bg-midnight-900 border border-ivory-300/15 focus:border-amber-450 text-sm text-ivory-100" />
+            </div>
+          </div>
+
+          <!-- Audience Selection (Hidden for defaults) -->
+          <input id="cfgAudience" type="hidden" value="Young Adult / Literary (PG-13)" />
+
+          <!-- Adaptation Intensity Selector -->
+          <div class="space-y-3">
+            <p class="block text-xs font-mono uppercase tracking-wider text-ivory-300">
+              Emotional Adaptation Responsiveness
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <button type="button" data-intensity="SUBTLE" class="intensity-card text-left p-4 rounded-xl border border-ivory-300/15 bg-midnight-900/60 hover:border-ivory-300/30 transition-all">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-mono font-medium text-ivory-200">SUBTLE</span>
+                  <span class="text-[10px] text-ivory-400 font-mono">Delicate Tones</span>
+                </div>
+                <p class="text-xs text-ivory-400 font-light">Subtle sensory shifts and atmospheric coloring without plot disruption.</p>
+              </button>
+
+              <button type="button" data-intensity="BALANCED" class="intensity-card text-left p-4 rounded-xl border border-amber-450 bg-amber-450/10 transition-all">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-mono font-medium text-amber-350">BALANCED</span>
+                  <span class="text-[10px] text-amber-350/80 font-mono">Recommended</span>
+                </div>
+                <p class="text-xs text-ivory-300 font-light">Meaningful emotional nuances, thematic revelations, and character pacing.</p>
+              </button>
+
+              <button type="button" data-intensity="INTENSE" class="intensity-card text-left p-4 rounded-xl border border-ivory-300/15 bg-midnight-900/60 hover:border-ivory-300/30 transition-all">
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-xs font-mono font-medium text-ivory-200">INTENSE</span>
+                  <span class="text-[10px] text-ivory-400 font-mono">Dramatic Shifts</span>
+                </div>
+                <p class="text-xs text-ivory-400 font-light">Decisive narrative reversals, emotional challenges, and bold agency.</p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Camera Toggle Option -->
+          <div class="flex items-center justify-between p-4 rounded-xl border border-ivory-300/10 bg-midnight-900/40">
+            <div class="space-y-0.5">
+              <span class="text-sm text-ivory-200 font-medium">Enable Local Camera Expression Adaptation</span>
+              <p class="text-xs text-ivory-400 font-light">
+                Analyzed 100% locally in your browser. Video is never uploaded or saved.
+              </p>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input id="cfgEnableCameraCheckbox" type="checkbox" checked class="sr-only peer" />
+              <div class="w-11 h-6 bg-midnight-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-450"></div>
+            </label>
+          </div>
+
+          <!-- Bottom Navigation Buttons -->
+          <div class="flex items-center justify-between pt-4 border-t border-ivory-300/10">
+            <button id="backToLandingBtn" type="button" class="px-5 py-2.5 rounded-xl border border-ivory-300/15 hover:border-ivory-300/30 text-xs text-ivory-300 transition-colors">
+              Back to Overview
+            </button>
+            <button id="beginReadingBtn" type="button" class="px-8 py-3 rounded-xl bg-amber-450 hover:bg-amber-350 text-midnight-950 text-xs font-semibold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(212,155,67,0.3)]">
+              Begin Reading Experience
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 3: READING SCREEN (SPLIT VIEW)
+         ========================================== -->
+    <section id="screenReading" class="hidden flex-1 flex flex-col">
+      <!-- Reading Progress Header Bar -->
+      <div class="border-b border-ivory-300/10 bg-midnight-950/70 backdrop-blur-sm px-4 sm:px-6 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <!-- Story Title & Status -->
+          <div class="flex items-center gap-3">
+            <h2 id="readingHeaderTitle" class="font-display text-lg text-ivory-50 truncate max-w-xs sm:max-w-md">
+              The Lighthouse at Eventide
+            </h2>
+            <span id="readingProgressBadge" class="px-2 py-0.5 rounded-full bg-amber-450/15 text-amber-350 border border-amber-450/30 font-mono text-[11px]">
+              Paragraph 1 of 8
+            </span>
+            <span id="readingTimeRemaining" class="text-ivory-400 text-[11px] font-mono hidden sm:inline">
+              • ~3 min remaining
+            </span>
+          </div>
+
+          <!-- Reading Tool Actions -->
+          <div class="flex items-center gap-2 sm:gap-4">
+            <!-- Mood Badge -->
+            <div class="flex items-center gap-1.5 font-mono text-[11px] text-ivory-300 bg-midnight-900/60 px-2.5 py-1 rounded-lg border border-ivory-300/10">
+              <span class="text-ivory-400">Mood:</span>
+              <span id="currentNarrativeMoodText" class="text-amber-350 font-medium">Wistful &amp; Mysterious</span>
+            </div>
+
+            <!-- Typography Adjuster -->
+            <div class="flex items-center gap-1 border border-ivory-300/15 rounded-lg p-0.5 bg-midnight-900/80">
+              <button id="fontDecreaseBtn" class="px-2 py-0.5 hover:bg-midnight-800 rounded text-xs text-ivory-300" title="Decrease font size">A-</button>
+              <button id="fontIncreaseBtn" class="px-2 py-0.5 hover:bg-midnight-800 rounded text-xs text-ivory-300" title="Increase font size">A+</button>
+            </div>
+
+            <!-- Reading Pace Selector -->
+            <select id="readingSpeedSelect" class="bg-midnight-900 border border-ivory-300/15 rounded-lg px-2 py-1 text-xs text-ivory-300">
+              <option value="fast">Fast (14s)</option>
+              <option value="normal" selected>Normal (22s)</option>
+              <option value="contemplative">Contemplative (32s)</option>
+            </select>
+
+            <!-- State Inspector Toggle -->
+            <button id="toggleInspectorBtn" class="px-2.5 py-1 rounded-lg border border-ivory-300/15 hover:border-violet-450/40 text-[11px] font-mono text-ivory-300 transition-colors">
+              Inspector
+            </button>
+
+            <!-- Reset Button -->
+            <button id="resetStoryBtn" class="px-2.5 py-1 rounded-lg border border-ivory-300/15 hover:border-red-400/40 text-[11px] font-mono text-ivory-300 transition-colors">
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Split Layout (Reading Pane + Telemetry Monitor) -->
+      <div class="flex-1 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-8 p-4 sm:p-6 lg:p-8">
+
+        <!-- LEFT COLUMN: Book Page & Paragraph Flow (Cols 1..8) -->
+        <div class="lg:col-span-8 flex flex-col justify-between space-y-6">
+          <article class="bg-midnight-900/40 border border-ivory-300/10 rounded-2xl p-6 sm:p-10 shadow-2xl space-y-8 flex-1 flex flex-col justify-between">
+            <div>
+              <!-- Book Header -->
+              <div class="text-center space-y-2 border-b border-ivory-300/10 pb-6 mb-8">
+                <div class="flex items-center justify-center gap-3 text-xs font-mono uppercase tracking-widest text-amber-350/90">
+                  <span id="bookGenreLabel">MYSTERY</span>
+                  <span>•</span>
+                  <span id="bookStyleLabel">LITERARY STYLE</span>
+                  <span>•</span>
+                  <span id="bookIntensityLabel">BALANCED ADAPTATION</span>
+                </div>
+                <h3 id="bookMainTitle" class="font-display text-3xl sm:text-4xl text-ivory-50 tracking-wide font-normal">
+                  The Lighthouse at Eventide
+                </h3>
+              </div>
+
+              <!-- Paragraphs Stream -->
+              <div id="storyParagraphsContainer" class="font-serif reading-size-md text-ivory-100 space-y-6">
+                <!-- Dynamically populated paragraphs -->
+              </div>
+
+              <!-- Evolving Indicator Pulse -->
+              <div id="storyEvolvingIndicator" class="hidden mt-8 p-4 rounded-xl border border-amber-450/30 bg-amber-450/5 flex items-center justify-center gap-3 evolving-pulse">
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-450"></span>
+                <span id="evolvingStatusText" class="font-display italic text-base text-amber-350">
+                  Synthesizing the next narrative development...
+                </span>
+              </div>
+
+              <!-- Generation Error Banner -->
+              <div id="generationErrorBanner" class="hidden mt-6 p-4 rounded-xl border border-red-500/40 bg-red-950/20 text-xs text-red-200 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <svg class="w-4 h-4 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span id="generationErrorMessage">Story generation encountered an issue.</span>
+                </div>
+                <button id="retryGenerationBtn" class="px-3 py-1 bg-red-500/30 hover:bg-red-500/50 rounded text-red-100 font-mono text-[11px] transition-colors">
+                  Retry
+                </button>
+              </div>
+            </div>
+
+            <!-- Reading Loop Bottom Progress & Action Controls -->
+            <div class="pt-6 border-t border-ivory-300/10 space-y-3">
+              <div class="flex items-center justify-between text-xs font-mono text-ivory-400">
+                <span id="readingCycleStageLabel">OBSERVING EXPRESSION WINDOW...</span>
+                <span id="readingTimerCountdown">22s</span>
+              </div>
+              <div class="w-full h-1.5 rounded-full bg-midnight-950 overflow-hidden border border-ivory-300/10">
+                <div id="readingWindowProgressBar" class="h-full bg-gradient-to-r from-amber-450 to-amber-350 transition-all duration-500" style="width: 0%;"></div>
+              </div>
+              <div class="flex items-center justify-between pt-2">
+                <button id="pauseAdaptationBtn" type="button" class="text-xs text-ivory-400 hover:text-ivory-200 flex items-center gap-1.5">
+                  <span id="pauseBtnIcon">⏸</span>
+                  <span id="pauseBtnText">Pause Auto-Advance</span>
+                </button>
+                <div class="flex items-center gap-2">
+                  <button id="concludeStoryNowBtn" type="button" class="text-xs text-ivory-400 hover:text-amber-350 transition-colors">
+                    Conclude Story
+                  </button>
+                  <button id="manualContinueBtn" type="button" class="px-4 py-2 rounded-lg bg-amber-450 hover:bg-amber-350 text-midnight-950 text-xs font-semibold uppercase tracking-wider transition-all">
+                    Continue to Next Paragraph →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- RIGHT COLUMN: Real-Time Camera Telemetry Monitor (Cols 9..12) -->
+        <aside class="lg:col-span-4 space-y-6">
+          <div class="glass-panel rounded-2xl p-5 space-y-5">
+            <!-- Monitor Header & Audio Visualizer Canvas -->
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span id="monitorPulseDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <h4 class="font-mono text-xs uppercase tracking-wider text-ivory-200">Emotion Telemetry</h4>
+                </div>
+                <span id="monitorSourceBadge" class="text-[10px] font-mono text-ivory-400 bg-midnight-950 px-2 py-0.5 rounded border border-ivory-300/10">
+                  LOCAL WEBCAM CV
+                </span>
+              </div>
+              <!-- Real-time Procedural Audio Waveform Canvas -->
+              <div>
+                <canvas id="audioWaveCanvas" width="280" height="32" title="Procedural Audio Spectrum"></canvas>
+              </div>
+            </div>
+
+            <!-- Webcam Feed / Canvas Overlay Box -->
+            <div class="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-midnight-950 border border-ivory-300/10">
+              <video id="webcamVideo" class="w-full h-full object-cover -scale-x-100" muted playsinline autoplay></video>
+              <canvas id="landmarkOverlayCanvas" class="absolute inset-0 w-full h-full object-cover -scale-x-100 pointer-events-none"></canvas>
+
+              <!-- Camera Disabled / Error Overlay -->
+              <div id="cameraOffOverlay" class="absolute inset-0 bg-midnight-950/90 flex flex-col items-center justify-center p-4 text-center space-y-3">
+                <div class="w-10 h-10 rounded-full bg-midnight-800 flex items-center justify-center text-ivory-400">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <p id="cameraOverlayStatusText" class="text-xs text-ivory-400 font-light max-w-xs">
+                  Camera analysis is disabled. You can enable camera or use the manual mood buttons below.
+                </p>
+                <button id="enableCameraFromMonitorBtn" type="button" class="px-3.5 py-1.5 rounded-lg border border-amber-450/40 bg-amber-450/10 text-amber-350 hover:bg-amber-450/20 text-xs font-mono transition-colors">
+                  Enable Camera
+                </button>
+              </div>
+
+              <!-- Live Indicator Badge -->
+              <div id="liveVideoBadge" class="hidden absolute top-2 left-2 px-2 py-0.5 rounded bg-midnight-950/80 backdrop-blur-sm border border-emerald-400/40 text-emerald-400 font-mono text-[9px] flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <span>LOCAL INFERENCE</span>
+              </div>
+            </div>
+
+            <!-- Real-time Signal Stats Grid -->
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono border-y border-ivory-300/10 py-3">
+              <div class="space-y-0.5">
+                <span class="text-ivory-400 text-[10px] uppercase">Apparent Cue</span>
+                <p id="telemetryExpression" class="text-amber-350 font-medium">NEUTRAL</p>
+              </div>
+              <div class="space-y-0.5">
+                <span class="text-ivory-400 text-[10px] uppercase">Confidence</span>
+                <p id="telemetryConfidence" class="text-ivory-200">75% (Reliable)</p>
+              </div>
+              <div class="space-y-0.5">
+                <span class="text-ivory-400 text-[10px] uppercase">Trend</span>
+                <p id="telemetryTrend" class="text-ivory-200">Stable</p>
+              </div>
+              <div class="space-y-0.5">
+                <span class="text-ivory-400 text-[10px] uppercase">Window Samples</span>
+                <p id="telemetryObservations" class="text-ivory-200">0 / 10 min samples</p>
+              </div>
+              <div class="space-y-0.5">
+                <span class="text-ivory-400 text-[10px] uppercase">Adaptation</span>
+                <p id="telemetryAdaptationActive" class="text-emerald-400">Yes (BALANCED)</p>
+              </div>
+              <div class="space-y-0.5">
+                <span class="text-ivory-400 text-[10px] uppercase">Engine State</span>
+                <p id="telemetryEngineState" class="text-ivory-300">Observing reader</p>
+              </div>
+            </div>
+
+            <!-- Cooldown Indicator -->
+            <div class="flex items-center justify-between text-[11px] font-mono text-ivory-400">
+              <span id="cooldownBadge">Cooldown: Ready</span>
+              <span>Hysteresis: ±9%</span>
+            </div>
+
+            <!-- Probability Distribution Bars -->
+            <div class="space-y-2">
+              <span class="block text-[10px] font-mono uppercase tracking-wider text-ivory-400">
+                Live Category Probabilities
+              </span>
+              <div id="expressionBarsContainer" class="space-y-1.5">
+                <!-- Dynamically populated bars -->
+              </div>
+            </div>
+
+            <!-- Pending Narrative Directive Preview -->
+            <div class="p-3 rounded-xl border border-ivory-300/10 bg-midnight-950/60 space-y-1.5">
+              <span class="block text-[10px] font-mono uppercase tracking-wider text-amber-350/90">
+                Pending Narrative Directive
+              </span>
+              <p id="pendingDirectiveText" class="text-xs text-ivory-300 font-light leading-relaxed">
+                Continue the current narrative trajectory smoothly with rich sensory grounding.
+              </p>
+            </div>
+
+            <!-- Manual Mood Override Buttons -->
+            <div class="space-y-2 pt-2 border-t border-ivory-300/10">
+              <div class="flex items-center justify-between">
+                <span class="text-[10px] font-mono uppercase tracking-wider text-ivory-400">Manual Mood Cue</span>
+                <span id="manualOverrideStatus" class="text-[10px] font-mono text-amber-350">None</span>
+              </div>
+              <div class="grid grid-cols-3 gap-1.5">
+                <button type="button" data-mood="HAPPY" class="manual-mood-btn px-2 py-1.5 rounded-lg border border-ivory-300/15 bg-midnight-950 hover:border-amber-450/50 text-[11px] text-ivory-200 transition-colors">Happy</button>
+                <button type="button" data-mood="SAD" class="manual-mood-btn px-2 py-1.5 rounded-lg border border-ivory-300/15 bg-midnight-950 hover:border-amber-450/50 text-[11px] text-ivory-200 transition-colors">Sad</button>
+                <button type="button" data-mood="SURPRISED" class="manual-mood-btn px-2 py-1.5 rounded-lg border border-ivory-300/15 bg-midnight-950 hover:border-amber-450/50 text-[11px] text-ivory-200 transition-colors">Surprised</button>
+                <button type="button" data-mood="FEAR" class="manual-mood-btn px-2 py-1.5 rounded-lg border border-ivory-300/15 bg-midnight-950 hover:border-amber-450/50 text-[11px] text-ivory-200 transition-colors">Fear</button>
+                <button type="button" data-mood="ANGRY" class="manual-mood-btn px-2 py-1.5 rounded-lg border border-ivory-300/15 bg-midnight-950 hover:border-amber-450/50 text-[11px] text-ivory-200 transition-colors">Angry</button>
+                <button type="button" data-mood="NEUTRAL" class="manual-mood-btn px-2 py-1.5 rounded-lg border border-ivory-300/15 bg-midnight-950 hover:border-amber-450/50 text-[11px] text-ivory-200 transition-colors">Neutral</button>
+              </div>
+            </div>
+
+            <!-- Sidebar Control Buttons -->
+            <div class="flex items-center gap-2 pt-2">
+              <button id="sidebarCameraToggleBtn" type="button" class="flex-1 py-1.5 rounded-lg border border-ivory-300/15 hover:border-ivory-300/30 text-xs font-mono text-ivory-300 transition-colors">
+                Stop Camera
+              </button>
+              <button id="sidebarAdaptationToggleBtn" type="button" class="flex-1 py-1.5 rounded-lg border border-ivory-300/15 hover:border-ivory-300/30 text-xs font-mono text-ivory-300 transition-colors">
+                Adaptation: ON
+              </button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         SCREEN 4: ENDING SCREEN & FULL MANUSCRIPT
+         ========================================== -->
+    <section id="screenEnding" class="hidden flex-1 py-12 px-4 sm:px-6">
+      <div class="max-w-4xl mx-auto space-y-10">
+        <!-- Ending Header -->
+        <div class="text-center space-y-4">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-amber-450/25 bg-amber-450/5 text-amber-350 text-xs font-mono uppercase">
+            <span>Manuscript Complete</span>
+          </div>
+          <h2 id="endingStoryTitle" class="font-display text-4xl sm:text-5xl md:text-6xl text-ivory-50">
+            The Lighthouse at Eventide
+          </h2>
+          <p id="endingStoryMeta" class="text-xs font-mono uppercase tracking-widest text-ivory-400">
+            MYSTERY • LITERARY STYLE • 8 PARAGRAPHS
+          </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <button id="saveToArchiveBtn" type="button" class="px-5 py-2.5 rounded-xl border border-amber-450 bg-amber-450/10 hover:bg-amber-450/20 text-amber-350 text-xs font-medium tracking-wide transition-colors flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+            </svg>
+            <span>Save to Archive</span>
+          </button>
+
+          <button id="exportStoryTxtBtn" type="button" class="px-4 py-2.5 rounded-xl border border-ivory-300/20 hover:border-ivory-300/40 text-xs text-ivory-200 transition-colors flex items-center gap-2">
+            <span>Download .TXT</span>
+          </button>
+
+          <button id="exportStoryMdBtn" type="button" class="px-4 py-2.5 rounded-xl border border-ivory-300/20 hover:border-ivory-300/40 text-xs text-ivory-200 transition-colors flex items-center gap-2">
+            <span>Download .MD</span>
+          </button>
+
+          <button id="continueFromEndingBtn" type="button" class="px-4 py-2.5 rounded-xl border border-violet-450/30 hover:border-violet-450 text-xs text-violet-450 transition-colors">
+            Continue Story (+3 §)
+          </button>
+
+          <button id="toggleEvolutionSummaryBtn" type="button" class="px-4 py-2.5 rounded-xl border border-ivory-300/15 hover:border-ivory-300/30 text-xs text-ivory-300 transition-colors">
+            Show Narrative Evolution Map
+          </button>
+
+          <button id="restartNewStoryBtn" type="button" class="px-5 py-2.5 rounded-xl bg-amber-450 hover:bg-amber-350 text-midnight-950 text-xs font-semibold uppercase tracking-wider transition-all">
+            Begin New Story
+          </button>
+        </div>
+
+        <!-- Archive Saved Toast Notification -->
+        <div id="archiveSavedToast" class="opacity-0 transition-opacity duration-300 text-center text-xs font-mono text-emerald-400">
+          ✓ Manuscript saved to local persistent archive
+        </div>
+
+        <!-- Narrative Evolution Map Accordion -->
+        <div id="evolutionSummarySection" class="hidden rounded-2xl border border-ivory-300/10 bg-midnight-900/40 p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">
+              Narrative Evolution Record
+            </h4>
+            <span id="evolutionAdaptationCount" class="text-xs font-mono text-ivory-400">
+              0 Narrative Shifts
+            </span>
+          </div>
+          <div id="evolutionTimelineList" class="space-y-3">
+            <!-- Dynamically populated evolution entries -->
+          </div>
+        </div>
+
+        <!-- Complete Story Manuscript -->
+        <article class="bg-midnight-900/40 border border-ivory-300/10 rounded-2xl p-6 sm:p-12 shadow-2xl space-y-8">
+          <div class="text-center font-mono text-xs uppercase tracking-widest text-ivory-400 border-b border-ivory-300/10 pb-4">
+            Complete Manuscript
+          </div>
+          <div id="endingFullManuscript" class="font-serif reading-size-md text-ivory-100 space-y-6">
+            <!-- Complete prose -->
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       MANUSCRIPT ARCHIVE DRAWER
+       ========================================== -->
+  <div id="archiveDrawer" class="drawer-closed fixed inset-0 z-50 overflow-hidden">
+    <!-- Backdrop -->
+    <div id="archiveDrawerBackdrop" class="drawer-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="drawer-content w-screen max-w-md bg-midnight-950 border-l border-ivory-300/10 flex flex-col shadow-2xl">
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-ivory-300/10 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <svg class="w-5 h-5 text-amber-350" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <h3 class="font-display text-xl text-ivory-50">Manuscript Archive</h3>
+          </div>
+          <button id="closeArchiveDrawerBtn" class="text-ivory-400 hover:text-ivory-100 p-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Drawer Body -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-4">
+          <div id="archiveEmptyState" class="hidden text-center py-12 space-y-3">
+            <p class="text-sm text-ivory-400 font-light">No saved manuscripts yet.</p>
+            <p class="text-xs text-ivory-400/60 font-light">Complete any story to save it automatically or click Save to Archive.</p>
+          </div>
+          <div id="archivedStoriesList" class="space-y-4">
+            <!-- Dynamically populated archived stories -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODALS: CAMERA CONSENT, PRIVACY, ENGINE, INSPECTOR
+       ========================================== -->
+
+  <!-- Camera Consent Modal -->
+  <div id="cameraConsentModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="max-w-md w-full bg-midnight-950 border border-ivory-300/15 rounded-2xl p-6 sm:p-7 space-y-5 shadow-2xl">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-emerald-400/10 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </div>
+        <div>
+          <h3 class="font-display text-xl text-ivory-50">Camera Expression Adaptation</h3>
+          <p class="text-xs text-ivory-400">100% Client-Side Privacy Guarantee</p>
+        </div>
+      </div>
+
+      <p class="text-xs sm:text-sm text-ivory-300 font-light leading-relaxed">
+        EMOTIVE observes subtle facial cues (smiles, brow furrowing, surprise) locally inside your browser via MediaPipe WebAssembly.
+        <strong class="text-ivory-100 font-medium">No video, images, or face biometrics are ever uploaded or saved anywhere.</strong>
+      </p>
+
+      <div class="space-y-2 text-xs text-ivory-400 bg-midnight-900/60 p-3.5 rounded-xl border border-ivory-300/10 font-light">
+        <p>• Only aggregated emotional labels shape the story prompt.</p>
+        <p>• Procedural audio ambiance responds harmoniously.</p>
+        <p>• You can turn the camera off or use manual mood buttons anytime.</p>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pt-2">
+        <button id="consentContinueWithoutCameraBtn" type="button" class="flex-1 py-2.5 rounded-xl border border-ivory-300/15 text-xs text-ivory-300 hover:text-ivory-100 transition-colors">
+          Continue Without Camera
+        </button>
+        <button id="consentGrantCameraBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-amber-450 hover:bg-amber-350 text-midnight-950 text-xs font-semibold uppercase tracking-wider transition-all">
+          Enable &amp; Start Story
+        </button>
+      </div>
+      <button id="closeCameraConsentBtn" type="button" class="w-full text-center text-[11px] text-ivory-400 hover:underline">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Privacy Architecture Modal -->
+  <div id="privacyInfoModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="max-w-lg w-full bg-midnight-950 border border-ivory-300/15 rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-ivory-300/10 pb-4">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          <h3 class="font-display text-2xl text-ivory-50">Privacy Architecture</h3>
+        </div>
+        <button id="closePrivacyModalBtn" class="text-ivory-400 hover:text-ivory-100">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs sm:text-sm text-ivory-300 font-light leading-relaxed">
+        <div class="space-y-1">
+          <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">1. Client-Side Only Inference</h4>
+          <p>
+            MediaPipe FaceLandmarker runs strictly inside your local browser tab via WebAssembly and WebGL. Video frames are analyzed directly in RAM and immediately discarded.
+          </p>
+        </div>
+        <div class="space-y-1">
+          <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">2. Zero Biometric Storage or Transmission</h4>
+          <p>
+            Neither the Express backend nor the Google Gemini API ever receives video frames, photos, facial coordinates, or landmark arrays.
+          </p>
+        </div>
+        <div class="space-y-1">
+          <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">3. Aggregated Signals Only</h4>
+          <p>
+            When generating a paragraph, only high-level aggregated categories (e.g., <code>"HAPPY"</code> or <code>"FEAR"</code>) are bundled into the narrative prompt payload.
+          </p>
+        </div>
+        <div class="space-y-1">
+          <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">4. Instant Hardware Teardown</h4>
+          <p>
+            When you click "Stop Camera", all active MediaStream tracks are explicitly terminated, shutting down camera hardware immediately.
+          </p>
+        </div>
+      </div>
+
+      <button id="ackPrivacyModalBtn" class="w-full py-3 rounded-xl bg-midnight-900 border border-ivory-300/20 text-xs font-mono text-ivory-200 hover:border-amber-450 transition-colors">
+        Close Privacy Information
+      </button>
+    </div>
+  </div>
+
+  <!-- Engine Configuration Modal -->
+  <div id="engineConfigModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+    <div class="max-w-md w-full bg-midnight-950 border border-ivory-300/15 rounded-2xl p-6 sm:p-7 space-y-6 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-ivory-300/10 pb-4">
+        <div class="flex items-center gap-2.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-violet-450"></span>
+          <h3 class="font-display text-2xl text-ivory-50">Gemini Engine Settings</h3>
+        </div>
+        <button id="closeEngineModalBtn" class="text-ivory-400 hover:text-ivory-100">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div class="space-y-1.5">
+          <label for="cfgGeminiModel" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">Model</label>
+          <input id="cfgGeminiModel" type="text" value="gemini-2.5-flash" class="w-full px-3 py-2 rounded-xl bg-midnight-900 border border-ivory-300/15 text-xs text-ivory-100 font-mono" />
+          <p class="text-[11px] text-ivory-400 font-light">Recommended: gemini-2.5-flash</p>
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="cfgConnectionMode" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">Connection Mode</label>
+          <select id="cfgConnectionMode" class="w-full px-3 py-2 rounded-xl bg-midnight-900 border border-ivory-300/15 text-xs text-ivory-100">
+            <option value="auto" selected>Auto (Server Proxy / Fallback to Built-in)</option>
+            <option value="proxy">Server Proxy Only (/api/generate-paragraph)</option>
+            <option value="direct">Direct Client API Key (Local Testing)</option>
+            <option value="builtin">Built-in Offline Adaptive Engine Only</option>
+          </select>
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="cfgLocalApiKey" class="block text-xs font-mono uppercase tracking-wider text-ivory-300">
+            Direct Gemini API Key <span class="text-ivory-400/60">(Optional)</span>
+          </label>
+          <input id="cfgLocalApiKey" type="password" placeholder="AIzaSy..." class="w-full px-3 py-2 rounded-xl bg-midnight-900 border border-ivory-300/15 text-xs text-ivory-100 font-mono" />
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-mono">
+            <label for="cfgConfidenceThreshold" class="text-ivory-300">Confidence Threshold</label>
+            <span id="confThresholdVal" class="text-amber-350">58%</span>
+          </div>
+          <input id="cfgConfidenceThreshold" type="range" min="30" max="85" value="58" class="w-full accent-amber-450" />
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button id="saveEngineConfigBtn" type="button" class="w-full py-2.5 rounded-xl bg-amber-450 hover:bg-amber-350 text-midnight-950 text-xs font-semibold uppercase tracking-wider transition-all">
+          Save Engine Settings
+        </button>
+        <p id="engineConfigSavedToast" class="opacity-0 transition-opacity duration-300 text-center text-xs font-mono text-emerald-400 mt-2">
+          ✓ Configuration saved
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Narrative State Inspector Panel (Drawer) -->
+  <div id="narrativeInspectorPanel" class="hidden fixed bottom-4 right-4 z-40 w-96 max-w-[calc(100vw-2rem)] bg-midnight-950/95 border border-violet-450/40 rounded-2xl p-5 shadow-2xl backdrop-blur-md space-y-4 max-h-[75vh] overflow-y-auto">
+    <div class="flex items-center justify-between border-b border-ivory-300/10 pb-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-violet-450"></span>
+        <h4 class="font-mono text-xs uppercase tracking-wider text-ivory-200">Narrative State Inspector</h4>
+      </div>
+      <button id="closeInspectorBtn" class="text-ivory-400 hover:text-ivory-100 text-xs font-mono">Close</button>
+    </div>
+
+    <div class="space-y-2 text-xs font-mono">
+      <div>
+        <span class="text-ivory-400 text-[10px] block">Story ID:</span>
+        <span id="inspStoryId" class="text-ivory-200 text-[11px]">-</span>
+      </div>
+      <div>
+        <span class="text-ivory-400 text-[10px] block">Latest Plot Development:</span>
+        <p id="inspPlotDev" class="text-amber-350 text-[11px] leading-relaxed">-</p>
+      </div>
+      <div>
+        <span class="text-ivory-400 text-[10px] block">Continuity &amp; Open Threads:</span>
+        <p id="inspContinuity" class="text-ivory-300 text-[11px] leading-relaxed">-</p>
+      </div>
+      <div>
+        <span class="text-ivory-400 text-[10px] block">Raw JSON Response:</span>
+        <pre id="inspRawJson" class="p-2.5 rounded-lg bg-midnight-900 border border-ivory-300/10 text-[10px] text-ivory-300 overflow-x-auto max-h-48"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Bootstrap Script -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
