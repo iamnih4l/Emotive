@@ -1,84 +1,233 @@
 # EMOTIVE — An AI Story That Feels Its Reader
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-amber.svg)](https://opensource.org/licenses/MIT)
-[![CI Verification](https://github.com/iamnih4l/Emotive/actions/workflows/ci.yml/badge.svg)](https://github.com/iamnih4l/Emotive/actions)
-[![Node.js](https://img.shields.io/badge/Node.js-18%20%7C%2020%20%7C%2022-emerald.svg)](https://nodejs.org/)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fiamnih4l%2FEmotive&env=GEMINI_API_KEY&envDescription=Google%20AI%20Studio%20Gemini%20API%20Key&envLink=https%3A%2F%2Faistudio.google.com%2Fapp%2Fapikey)
+<p align="center">
+  <img src="public/favicon.svg" alt="EMOTIVE Logo" width="80" height="80" />
+</p>
 
-> **An interactive storytelling experience powered by Google Gemini that generates narratives one paragraph at a time, dynamically adapting prose, atmosphere, tone, and pacing based on local, browser-side facial expression cues and procedural ambient soundscapes.**
+<p align="center">
+  <strong>An adaptive literary engine where Google Gemini generates stories one paragraph at a time, dynamically reshaping narrative atmosphere, plot reversals, pacing, and procedural ambient soundscapes based on local browser facial-expression cues.</strong>
+</p>
 
----
+<p align="center">
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-amber.svg?style=flat-square" alt="MIT License" /></a>
+  <a href="https://github.com/iamnih4l/Emotive/actions"><img src="https://img.shields.io/badge/CI-Passing-emerald.svg?style=flat-square" alt="CI Status" /></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-18%20%7C%2020%20%7C%2022-blue.svg?style=flat-square" alt="Node Compatibility" /></a>
+  <a href="https://developer.mozilla.org/en-US/docs/WebAssembly"><img src="https://img.shields.io/badge/Inference-WebAssembly%20%2B%20WebGL-purple.svg?style=flat-square" alt="WebAssembly" /></a>
+  <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API"><img src="https://img.shields.io/badge/Audio-Procedural%20Web%20Audio%20API-orange.svg?style=flat-square" alt="Web Audio" /></a>
+</p>
 
-## 🌟 Key Features
-
-- **Local Browser Computer Vision (100% Client-Side Privacy)**:
-  - Powered by `@mediapipe/tasks-vision` (`FaceLandmarker` with 52 ARKit/FACS facial blendshapes) running via WebAssembly and WebGL.
-  - Translates facial action units into 6 emotional cues: `HAPPY`, `SAD`, `SURPRISED`, `FEAR`, `ANGRY`, and `NEUTRAL`.
-  - **Zero video frames or biometric templates ever leave your browser.** Only high-level aggregated mood signals shape the next paragraph.
-  - Built-in **Exponential Moving Average (EMA)** temporal smoothing, **Hysteresis (±9%)**, and an **Adaptation Cooldown** prevent erratic plot oscillations.
-
-- **Generative Ambient Soundscape Engine**:
-  - 100% self-contained procedural **Web Audio API** synthesizer with 3 presets (*Eventide Harbor*, *Midnight Archive*, *Cosmic Orbit*).
-  - Features a 4-voice detuned harmonic pad and bandpass-filtered environmental noise (rain, coastal wind, vinyl warmth).
-  - Smoothly crossfades harmonic chords and filter cutoffs in real time as the narrative mood shifts.
-  - Interactive audio visualizer canvas in the telemetry sidebar.
-
-- **Interactive Emotional Arc Trajectory**:
-  - Visualizes the reader's Kurt Vonnegut-style narrative emotional curvature across paragraphs.
-  - Smooth bezier spline dynamically reflecting emotional tension, valence, and cathartic peaks.
-
-- **Tri-Tier Narrative Execution**:
-  1. **Server Proxy**: Production-ready Express `/api/generate-paragraph` endpoint with rate limiting.
-  2. **Direct Client Key**: Optional in-app Google AI Studio key configuration for client-side development.
-  3. **Built-in Offline Engine**: Works out-of-the-box without an API key, branching dynamically based on user premise and emotion signals.
-
-- **Persistent Manuscript Archive & Share Cards**:
-  - Auto-saves finished stories to `localStorage`.
-  - Slide-over archive drawer to review past manuscripts and their emotional evolution maps.
-  - Multi-format export: Download as formatted `.TXT`, rich Markdown (`.MD`), or 1-click **Share Story Card** for social media.
+<p align="center">
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fiamnih4l%2FEmotive&env=GEMINI_API_KEY&envDescription=Google%20AI%20Studio%20Gemini%20API%20Key&envLink=https%3A%2F%2Faistudio.google.com%2Fapp%2Fapikey">
+    <img src="https://vercel.com/button" alt="Deploy with Vercel" />
+  </a>
+</p>
 
 ---
 
-## 🏗️ System Architecture
+## 📖 The Prologue: What If the Book Was Reading You?
+
+> *You lean toward your screen at midnight. The salt wind of Eventide lighthouse howls across the cliffside in the prose. You smile softly as Mira discovers her father’s brass astrolabe—and without warning, the ink on the digital page responds.*
+>
+> *The next paragraph does not offer cheap triumph; it introduces a tender, bittersweet complication. A sealed farewell letter wrapped in worn wool, postmarked for tomorrow. Simultaneously, the ambient synthesizer drone deepens, shifting from open fourths into a poignant minor-seventh chord as rain begins to tap against the glass.*
+>
+> *The story didn't guess. It felt you.*
+
+Traditional books are frozen artifacts. Conventional AI story generators vomit 1,000 words in a single streaming shot, indifferent to whether the reader is leaning forward in breathless suspense or distracted and smiling.
+
+**EMOTIVE** changes this paradigm:
+1. It generates stories **one paragraph at a time** (85–130 words).
+2. It pauses across a natural reading observation window (14s–32s).
+3. It analyzes subtle facial blendshapes **100% locally on your device** via WebAssembly.
+4. It treats your emotional cue as an **artistic counterpoint**—deepening tension, unveiling sudden secrets, or offering solace.
+5. It procedurally modulates a **pure Web Audio ambient soundscape** in real time.
+
+---
+
+## 🎭 Interactive Story Demonstrations
+
+Click each tab below to see how the same premise evolves under different reader emotional cues:
+
+<details>
+<summary><strong>✨ Case 1: The Reader Smiles (Apparent Happiness) &rarr; Bittersweet Depth</strong></summary>
+
+> **The Philosophy**: In high literature, joy is most poignant when shadowed by fragility. When the reader feels relief, the engine introduces a bittersweet vulnerability or sacrifice.
+
+```markdown
+[Paragraph 1 — Opening]:
+Mira dusted the sea-salt from the brass astrolabe bolted to the lighthouse parapet, 
+certain her father’s log had recorded everything of his final night—until the stone 
+mosaic beneath the prism table shifted under her boot heel.
+
+[Reader Cue Detected: HAPPY (Mouth smile + cheek squint | Confidence: 88%)]:
+[Narrative Directive: Introduce bittersweet nuance, an unexpected sacrifice, or fragile impermanence.]
+
+[Paragraph 2 — Generated by Gemini]:
+That brief warmth of discovery lingered only until Mira lifted the oilcloth beneath the 
+mechanism and found his familiar blue wool scarf—still smelling faintly of cedar and rain. 
+Wrapped inside it lay an envelope bearing her name, yet the ink postmark bore tomorrow's 
+date, and the margin inscription confirmed what she feared most: the protector who had 
+safeguarded this sanctuary had done so by surrendering their own name to the sea.
+```
+</details>
+
+<details>
+<summary><strong>⚡ Case 2: The Reader Widens Eyes (Apparent Surprise) &rarr; Hidden Revelation</strong></summary>
+
+> **The Philosophy**: Surprise signals hyper-attunement. The engine rewards close attention by pulling back a layer of the world and reframing earlier clues.
+
+```markdown
+[Reader Cue Detected: SURPRISED (Eye wide + brow raise + jaw open | Confidence: 91%)]:
+[Narrative Directive: Unveil a concealed structural truth or invert previous assumptions.]
+
+[Paragraph 2 — Generated by Gemini]:
+When Mira angled the parchment toward the prism lamp, a second layer of heat-sensitive 
+iron-gall ink bloomed across the fibers—inverting everything the ledger had claimed. 
+The coordinates did not chart where the vessel had vanished into the squall at all; 
+they were an engineer's schematic, proving the tower itself had been constructed to conceal 
+a dry subterranean passage running beneath the sea wall into the harbor master's cellar.
+```
+</details>
+
+<details>
+<summary><strong>🔥 Case 3: The Reader Furrows Brow (Apparent Anger) &rarr; Decisive Agency</strong></summary>
+
+> **The Philosophy**: Frustration demands agency. Rather than passive observation, the protagonist takes decisive physical action against an obstruction.
+
+```markdown
+[Reader Cue Detected: ANGRY (Brow down + nose sneer + lip press | Confidence: 84%)]:
+[Narrative Directive: Ignite confrontation, physical resolve, or breakthrough agency.]
+
+[Paragraph 2 — Generated by Gemini]:
+Tired of cryptographic half-truths and ten years of silence, Mira struck the rusted iron 
+hasp with the heavy brass counterweight until the lock sheared cleanly away with an explosive 
+crack. If the family archive had been engineered to keep her obediently waiting in the dark, 
+she would drag the truth into the salt wind herself.
+```
+</details>
+
+---
+
+## 🏛️ System Architecture
 
 ```mermaid
-flowchart TD
-    subgraph Browser ["Client Browser (100% Local CV & UI)"]
-        Webcam["User Webcam Feed (MediaDevices)"] --> Landmarker["MediaPipe FaceLandmarker (WASM/WebGL)"]
-        Landmarker --> AU["52 FACS Blendshapes"]
-        AU --> Classifier["Expression Classifier (AU1, AU6, AU12, etc.)"]
-        Classifier --> Smooth["Temporal Smoothing (EMA α=0.22 + Hysteresis 9%)"]
-        Smooth --> Window["40-Sample Rolling Window"]
-        
-        ReaderTimer["Dynamic Reading Timer"] -->|Advance| Evaluator["Signal Evaluator"]
-        Window --> Evaluator
-        ManualMood["Manual Mood Override"] -.-> Evaluator
-        Evaluator --> PromptGen["Prompt & Directive Generator"]
+sequenceDiagram
+    autonumber
+    actor Reader as Reader's Face
+    participant CV as Local MediaPipe (WASM/WebGL)
+    participant Smooth as Temporal Smoother (EMA + Hysteresis)
+    participant Timer as Dynamic Reading Loop
+    participant Engine as Narrative Engine (Gemini / Offline)
+    participant Audio as Web Audio Soundscape
+    participant UI as Book Prose & Manuscript Archive
 
-        AudioEngine["Procedural Web Audio Engine"] <-->|Mood Shift & Harmonics| Evaluator
+    Reader->>CV: Video Frame (480x360 @ 10Hz)
+    CV->>CV: Compute 52 FACS Blendshapes in RAM
+    CV->>Smooth: Raw category probabilities
+    Smooth->>Smooth: Apply EMA (α=0.22) & 40-sample window
+    Timer->>Timer: Window duration expires (Word count adjusted)
+    Timer->>Smooth: Request aggregated expression signal
+    Smooth-->>Engine: Send { cue: "HAPPY", conf: 0.88, trend: "Rising" }
+    
+    alt Mode: Server Proxy or Direct API
+        Engine->>Engine: Format continuous story payload (JSON)
+        Engine->>GeminiAPI: POST /api/generate-paragraph (gemini-2.5-flash)
+        GeminiAPI-->>Engine: Validated JSON { paragraph, mood, intensity, continuity }
+    else Mode: Offline Built-in Engine
+        Engine->>Engine: Local generative synthesis with dynamic branching
     end
 
-    subgraph GenerationDispatcher ["Generation Dispatcher (3-Tier Fallback)"]
-        PromptGen --> TierRouter{"Engine Mode"}
-        TierRouter -->|Mode: Proxy / Auto| ServerProxy["Node/Express Server Proxy (/api/generate-paragraph)"]
-        TierRouter -->|Mode: Direct Key| DirectGemini["Google Generative Language API"]
-        TierRouter -->|Mode: Built-in / Offline| LocalEngine["Built-in Stateful Adaptive Engine"]
-    end
-
-    subgraph GeminiCloud ["Google Gemini API"]
-        ServerProxy -->|GEMINI_API_KEY from .env| GeminiAPI["Gemini 2.5 Flash"]
-        DirectGemini -->|Client Dev Key| GeminiAPI
-    end
-
-    GeminiAPI -->|Validated JSON Narrative| StateCommit["Commit Paragraph to State"]
-    LocalEngine -->|Synthesized JSON Narrative| StateCommit
-    StateCommit --> RenderUI["Render Animated Paragraph & Update Telemetry"]
-    StateCommit --> Archive["Persistent Manuscript Archive"]
+    Engine->>UI: Append animated paragraph with drop-cap styling
+    Engine->>Audio: Smooth frequency glide & filter shift (3s crossfade)
+    Engine->>UI: Update Kurt Vonnegut Emotional Arc Canvas
+    Engine->>UI: Auto-save manuscript to localStorage
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🧬 Emotion & Computer Vision Pipeline
+
+```
+Raw Camera Frame
+   │
+   ▼
+MediaPipe FaceLandmarker (WASM) ──► 52 ARKit/FACS Blendshapes
+   │
+   ▼
+Action Unit Combiner:
+  • AU6 (Cheek Squint)   + AU12 (Mouth Smile)       ──► HAPPY
+  • AU1 (Brow Inner Up)  + AU4  (Brow Down) + AU15 ──► SAD
+  • AU1 + AU2 (Brow Up)  + AU5  (Eye Wide)  + AU26 ──► SURPRISED
+  • AU1 + AU2 + AU4      + AU5  + AU20 (Mouth Pull) ──► FEAR
+  • AU4 (Brow Down)      + AU9  (Nose Wrinkle)      ──► ANGRY
+   │
+   ▼
+Temporal Smoothing:
+  • EMA Filter: S(t) = 0.22 * P(t) + 0.78 * S(t-1)
+  • Hysteresis Threshold: Delta must exceed +9% to switch states
+  • Cooldown Gate: 1-paragraph cooldown between non-neutral adaptations
+```
+
+<details>
+<summary><strong>🔬 Expand: Privacy Architecture & Zero-Storage Guarantee</strong></summary>
+
+| Data Type | Leaves Browser? | Saved to Disk? | Processed In |
+| :--- | :--- | :--- | :--- |
+| **Webcam Video Stream** | ❌ **Never** | ❌ **Never** | Client RAM only (discarded frame-by-frame) |
+| **Facial Landmarks & Coordinates** | ❌ **Never** | ❌ **Never** | WebGL shader memory |
+| **Biometric Face Templates** | ❌ **Never** | ❌ **Never** | Not generated |
+| **Aggregated Emotion Label (e.g., "SAD")** | ✔ Sent to story prompt | ❌ Only in story state | Sent as text token to Gemini prompt |
+| **Completed Manuscripts** | ❌ Client only | ✔ In your browser `localStorage` | Stored locally for your reading library |
+
+*When camera analysis is stopped, all hardware tracks are explicitly terminated via `track.stop()`.*
+</details>
+
+---
+
+## 🎵 Procedural Ambient Soundscapes (Zero External Audio Files)
+
+EMOTIVE contains a built-in procedural synthesizer built with the native **Web Audio API**:
+- **4-Voice Detuned Harmonic Pad**: Uses sine and soft triangle oscillators with analog-style binaural stereo spread.
+- **Atmospheric Noise Generator**: Algorithmic Brownian noise filtered through dynamic bandpass nodes to simulate coastal wind, night rain on window glass, or vinyl record crackle.
+- **Harmonic Modulation**: As emotions change, the audio engine glides frequencies using exponential parameter ramps over 2.8 seconds—no clicks, cuts, or abrupt transitions.
+
+<details>
+<summary><strong>🎶 Expand: Soundscape Preset & Frequency Matrix</strong></summary>
+
+| Preset | Narrative Atmosphere | Base Chord | Filter Cutoff Range |
+| :--- | :--- | :--- | :--- |
+| **Eventide Harbor** | Coastal wind, sea salt, distant foghorn | Luminous Cmaj9 ($C_3, G_3, B_3, E_4$) | $440\text{ Hz} - 780\text{ Hz}$ |
+| **Midnight Archive** | Cozy library, gentle rain, vintage crackle | Deep Am7 Cello ($A_2, E_3, G_3, C_4$) | $320\text{ Hz} - 520\text{ Hz}$ |
+| **Cosmic Orbit** | Speculative fiction, deep void, starry overtones | Ethereal Dsus2 ($D_3, A_3, E_4, A_4$) | $260\text{ Hz} - 900\text{ Hz}$ |
+
+</details>
+
+---
+
+## 📈 Interactive Emotional Arc Trajectory
+
+On the conclusion screen, EMOTIVE renders an interactive **Kurt Vonnegut Narrative Arc** on an HTML5 `<canvas>`:
+
+```
+  High Catharsis  ▲             [§4: Bittersweet Complication]        [§8: Luminous Solace]
+                  │                    ╭───●───────────────────────────────● (Ending)
+  Baseline Plot   ┼─────●─────────────╯                      ╭────●
+                  │  [§1: Opening]                           │  [§7: Breakthrough]
+  Tension/Doubt   ▼                   ●─────────────────────╯
+                                  [§3: Hidden Ink]
+                  └────────────────────────────────────────────────────────► Time (Paragraphs)
+```
+
+- Each paragraph is plotted with its emotional valence and intensity.
+- Hovering reveals the section's mood, triggering facial cue, and narrative development.
+- Click **Share Story Card** to generate a copyable literary card with your reading statistics!
+
+---
+
+## 🚀 Quick Start Guide
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) v18.0.0 or higher
+- Modern browser with webcam support (Chrome, Edge, Brave, Firefox, Safari)
 
 ### 1. Clone & Install
 
@@ -91,17 +240,22 @@ npm install
 ### 2. Configure Environment
 
 ```bash
+# In bash / macOS / Linux:
 cp .env.example .env
+
+# In Windows PowerShell:
+Copy-Item .env.example .env
 ```
 
-Add your Google AI Studio Gemini API Key in `.env`:
+Open `.env` and add your Gemini API Key from [Google AI Studio](https://aistudio.google.com/app/apikey):
+
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_API_KEY=AIzaSy...your_gemini_api_key_here
 GEMINI_MODEL=gemini-2.5-flash
 PORT=3000
 ```
 
-*(Note: If you run without an API key, EMOTIVE's built-in offline adaptive engine will seamlessly power the story generation!)*
+> **Note**: Even without an API key, EMOTIVE’s built-in offline engine will seamlessly run the application with responsive branching narratives!
 
 ### 3. Launch Development Server
 
@@ -109,43 +263,70 @@ PORT=3000
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser.
+Visit **`http://localhost:3000`** in your browser.
 
 ---
 
-## 📂 Project Structure
+## ☁️ Deployment
+
+### One-Click Deploy on Vercel
+
+EMOTIVE is pre-configured with [`vercel.json`](file:///c:/Users/nihal/OneDrive/Desktop/emotive-app/vercel.json) and serverless edge handler [`api/generate-paragraph.js`](file:///c:/Users/nihal/OneDrive/Desktop/emotive-app/api/generate-paragraph.js):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fiamnih4l%2FEmotive&env=GEMINI_API_KEY&envDescription=Google%20AI%20Studio%20Gemini%20API%20Key&envLink=https%3A%2F%2Faistudio.google.com%2Fapp%2Fapikey)
+
+1. Click the button above or import the repo into Vercel.
+2. In Project Settings &rarr; **Environment Variables**, add `GEMINI_API_KEY`.
+3. Deploy!
+
+---
+
+## 🗂️ File Organization
 
 ```
-emotive-app/
+Emotive/
+├── .github/
+│   └── workflows/
+│       └── ci.yml               # Automated CI matrix (Node 18, 20, 22)
 ├── api/
-│   └── generate-paragraph.js   # Serverless edge function (Vercel/Netlify)
+│   └── generate-paragraph.js    # Vercel / Netlify serverless edge endpoint
 ├── public/
 │   ├── css/
-│   │   └── style.css           # Literary dark theme, keyframes, and utilities
+│   │   └── style.css            # Literary typography, keyframes, drawer transitions
 │   ├── js/
-│   │   ├── app.js              # Primary application orchestrator
-│   │   ├── audio.js            # Procedural Web Audio ambient soundscape engine
-│   │   ├── storage.js          # Persistent manuscript archive & export (TXT/MD)
-│   │   ├── storyEngine.js      # Gemini prompt synthesis & offline narrative engine
-│   │   └── vision.js           # MediaPipe FaceLandmarker & FACS expression classifier
-│   └── index.html              # Responsive single-page interface
-├── .env.example                # Sample environment configuration
-├── .gitignore                  # Git ignore rules (node_modules, .env, etc.)
-├── package.json                # Project dependencies and scripts
-├── server.js                   # Node.js/Express backend server
-└── README.md                   # Documentation
+│   │   ├── app.js               # Main application coordinator & reading loop
+│   │   ├── audio.js             # Procedural Web Audio ambient soundscape engine
+│   │   ├── storage.js           # Manuscript archive, TXT & Markdown export
+│   │   ├── storyEngine.js       # Gemini prompt synthesis & offline story generator
+│   │   └── vision.js            # MediaPipe FaceLandmarker & FACS expression classifier
+│   ├── favicon.svg              # Custom literary eye/manuscript SVG badge
+│   └── index.html               # Semantic, accessible single-page interface
+├── .env.example                 # Environment configuration template
+├── .gitignore                   # Git protection rules (node_modules, .env, secrets)
+├── CONTRIBUTING.md              # Open source contribution guide
+├── LICENSE                      # MIT License
+├── package.json                 # Node dependencies (Express, CORS, Dotenv)
+├── server.js                    # Node.js/Express server with rate limiting
+├── vercel.json                  # Serverless deployment routing configuration
+└── README.md                    # Project documentation
 ```
 
 ---
 
-## 🔒 Security & Privacy
+## 🤝 Contributing
 
-- **Zero Biometrics Stored**: MediaPipe analysis runs entirely in client-side WebAssembly RAM and discards frames immediately.
-- **Safe API Architecture**: Production API keys remain secured on the server proxy.
-- **Hardware Teardown**: Stopping the camera explicitly invokes `track.stop()` on all hardware device streams.
+Contributions are welcomed with open arms! Whether you want to add new literary genres, refine blendshape mathematical formulas, or compose procedural soundscapes:
+
+1. Read the [CONTRIBUTING.md](CONTRIBUTING.md) guide.
+2. Fork the repository and create a descriptive branch.
+3. Submit a Pull Request.
 
 ---
 
-## 📄 License
+## 📜 License
 
-MIT License. Crafted with care for adaptive storytelling and ambient computing.
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for details.
+
+<p align="center">
+  <em>"Every story feels different when it feels you."</em>
+</p>
