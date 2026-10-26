@@ -1,0 +1,6 @@
+What if the book was reading you?
+
+Built EMOTIVE: an adaptive AI storyteller where Google Gemini 2.5 Flash reshapes the narrative plot twists, atmosphere, and procedural Web Audio soundscapes in real-time based on your facial expressions — running 100% locally in your browser via WebAssembly.
+
+Experience it live: https://emotive-omega.vercel.app/
+Code: https://github.com/iamnih4l/Emotive

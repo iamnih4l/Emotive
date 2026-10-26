@@ -22,3 +22,8 @@ Thumbs.db
 .vercel
 .netlify
 dist/
+
+# Brag composition build caches
+brag-output/composition/node_modules/
+brag-output/composition/.hyperframes/
+brag-output/composition/bin/

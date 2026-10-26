@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>EMOTIVE — Launch Video</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #09090d;
+        --card-bg: rgba(18, 18, 26, 0.82);
+        --card-border: rgba(212, 155, 67, 0.35);
+        --ink: #f4efe6;
+        --ink-muted: #a49eab;
+        --amber: #d49b43;
+        --amber-glow: rgba(212, 155, 67, 0.28);
+        --amber-bright: #f5c46b;
+        --violet: #9d84e8;
+        --emerald: #34d399;
+        --font-display: 'Cinzel', serif;
+        --font-serif: 'Playfair Display', Georgia, serif;
+        --font-sans: 'Inter', -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background-color: var(--ground);
+        color: var(--ink);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        background: radial-gradient(circle at 50% 30%, #171524 0%, #09090d 75%);
+        overflow: hidden;
+      }
+
+      /* Ambient Background Aura */
+      .bg-aura {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 1200px;
+        height: 1200px;
+        background: radial-gradient(circle, rgba(212, 155, 67, 0.12) 0%, rgba(157, 132, 232, 0.06) 45%, transparent 70%);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .clip {
+        position: absolute;
+        inset: 0;
+        width: 1920px;
+        height: 1080px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+      }
+
+      /* Common Elements */
+      .badge-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 22px;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(212, 155, 67, 0.4);
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--amber-bright);
+        margin-bottom: 24px;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--emerald);
+        box-shadow: 0 0 10px var(--emerald);
+      }
+
+      /* SCENE 1: The Hook */
+      #scene-1 {
+        text-align: center;
+      }
+
+      .s1-beacon {
+        width: 110px;
+        height: 110px;
+        margin-bottom: 28px;
+        filter: drop-shadow(0 0 35px rgba(212, 155, 67, 0.7));
+      }
+
+      .s1-headline {
+        font-family: var(--font-display);
+        font-size: 68px;
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: 0.06em;
+        color: var(--ink);
+        max-width: 1400px;
+        margin-bottom: 24px;
+        text-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+      }
+
+      .s1-headline span {
+        background: linear-gradient(135deg, #ffffff 20%, #d49b43 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .s1-tagline {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 32px;
+        color: var(--amber-bright);
+        opacity: 0.95;
+      }
+
+      /* SCENE 2: The Reader's Gaze (Computer Vision HUD) */
+      .hud-container {
+        width: 1280px;
+        height: 720px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 40px rgba(212, 155, 67, 0.1);
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+        position: relative;
+        backdrop-filter: blur(20px);
+      }
+
+      .hud-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .hud-title {
+        font-family: var(--font-display);
+        font-size: 26px;
+        letter-spacing: 0.1em;
+        color: var(--amber-bright);
+      }
+
+      .hud-body {
+        display: flex;
+        gap: 50px;
+        flex: 1;
+        margin-top: 30px;
+        align-items: center;
+      }
+
+      .face-viewport {
+        width: 480px;
+        height: 500px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px dashed rgba(212, 155, 67, 0.4);
+        border-radius: 14px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .face-wireframe {
+        width: 320px;
+        height: 380px;
+      }
+
+      .telemetry-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+
+      .telemetry-row {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .telemetry-label {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        color: var(--ink-muted);
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .telemetry-bar-bg {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+
+      .telemetry-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #d49b43, #f5c46b);
+        border-radius: 4px;
+      }
+
+      .decision-box {
+        margin-top: 15px;
+        padding: 20px 24px;
+        background: rgba(212, 155, 67, 0.1);
+        border: 1px solid var(--amber);
+        border-radius: 12px;
+      }
+
+      .decision-status {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--amber-bright);
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+
+      .decision-directive {
+        font-family: var(--font-sans);
+        font-size: 15px;
+        color: var(--ink);
+        line-height: 1.4;
+      }
+
+      /* SCENE 3: Gemini Manuscript Generation */
+      .book-container {
+        width: 1240px;
+        height: 740px;
+        background: #0f0e17;
+        border: 1px solid var(--card-border);
+        border-radius: 18px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(212, 155, 67, 0.12);
+        padding: 50px 70px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+      }
+
+      .book-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(212, 155, 67, 0.2);
+        padding-bottom: 20px;
+      }
+
+      .book-chapter {
+        font-family: var(--font-display);
+        font-size: 20px;
+        letter-spacing: 0.15em;
+        color: var(--amber);
+      }
+
+      .gemini-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        background: rgba(157, 132, 232, 0.15);
+        border: 1px solid rgba(157, 132, 232, 0.4);
+        border-radius: 20px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        color: var(--violet);
+      }
+
+      .prose-content {
+        margin-top: 35px;
+        font-family: var(--font-serif);
+        font-size: 32px;
+        line-height: 1.6;
+        color: var(--ink);
+      }
+
+      .drop-cap {
+        float: left;
+        font-family: var(--font-display);
+        font-size: 96px;
+        line-height: 0.85;
+        padding-top: 8px;
+        padding-right: 20px;
+        color: var(--amber-bright);
+        text-shadow: 0 0 25px rgba(212, 155, 67, 0.6);
+      }
+
+      .soundscape-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 24px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+        margin-top: 25px;
+      }
+
+      .soundscape-label {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        color: var(--ink-muted);
+      }
+
+      .soundscape-active {
+        font-family: var(--font-mono);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--amber-bright);
+      }
+
+      /* SCENE 4: Emotional Arc & Outro */
+      .outro-container {
+        width: 1320px;
+        height: 740px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .arc-card {
+        width: 100%;
+        height: 380px;
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        padding: 25px 40px;
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        backdrop-filter: blur(20px);
+      }
+
+      .arc-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .arc-title {
+        font-family: var(--font-display);
+        font-size: 20px;
+        letter-spacing: 0.08em;
+        color: var(--amber-bright);
+      }
+
+      .arc-canvas-box {
+        flex: 1;
+        width: 100%;
+        position: relative;
+      }
+
+      .brand-outro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .brand-title {
+        font-family: var(--font-display);
+        font-size: 56px;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        color: var(--ink);
+        margin-bottom: 12px;
+      }
+
+      .brand-tagline {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 24px;
+        color: var(--amber-bright);
+        margin-bottom: 24px;
+      }
+
+      .cta-pills {
+        display: flex;
+        gap: 16px;
+      }
+
+      .cta-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #d49b43 0%, #aa772b 100%);
+        border-radius: 8px;
+        font-family: var(--font-mono);
+        font-size: 16px;
+        font-weight: 700;
+        color: #09090d;
+        box-shadow: 0 10px 30px rgba(212, 155, 67, 0.4);
+      }
+
+      .cta-github {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 24px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        font-family: var(--font-mono);
+        font-size: 15px;
+        color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="20"
+      data-width="1920"
+      data-height="1080"
+    >
+      <!-- Audio Layer -->
+      <audio
+        id="bgMusic"
+        src="assets/music/happy-beats-business-moves-vol-11-by-ende-dot-app.mp3"
+        data-start="0"
+        data-duration="20"
+        data-volume="0.75"
+        data-fade-in="0.6"
+        data-fade-out="1.8"
+      ></audio>
+      <audio id="sfxSwitch1" src="assets/sfx/switch_001.ogg" data-start="1.4" data-duration="0.62" data-volume="0.8"></audio>
+      <audio id="sfxBong" src="assets/sfx/bong_001.ogg" data-start="5.8" data-duration="0.12" data-volume="0.9"></audio>
+      <audio id="sfxClick" src="assets/sfx/click_001.ogg" data-start="10.8" data-duration="0.10" data-volume="0.7"></audio>
+      <audio id="sfxSwitch2" src="assets/sfx/switch_001.ogg" data-start="16.2" data-duration="0.62" data-volume="0.8"></audio>
+
+      <div class="bg-aura" id="bgAura"></div>
+
+      <!-- ================= SCENE 1: The Hook (0s - 4.0s) ================= -->
+      <div id="scene-1" class="clip" data-start="0" data-duration="4.0">
+        <div class="badge-pill" id="s1Pill" data-layout-ignore="true">
+          <span class="status-dot"></span>
+          Adaptive Literary Experience
+        </div>
+
+        <svg class="s1-beacon" id="s1Beacon" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="30" stroke="#d49b43" stroke-width="2" stroke-opacity="0.8" />
+          <circle cx="32" cy="32" r="23" stroke="#f5c46b" stroke-width="1" stroke-dasharray="3 3" />
+          <path d="M16 42C24 38 32 38 48 42M16 28C24 24 32 24 48 28" stroke="#d49b43" stroke-width="2" stroke-linecap="round" />
+          <ellipse cx="32" cy="32" rx="13" ry="17" stroke="#f5c46b" stroke-width="2.5" />
+          <circle cx="32" cy="32" r="7.5" fill="#d49b43" />
+          <circle cx="32" cy="32" r="3.5" fill="#ffffff" />
+          <circle cx="35" cy="29" r="1.5" fill="#ffffff" />
+        </svg>
+
+        <h1 class="s1-headline" id="s1Headline">
+          WHAT IF THE BOOK<br /><span>WAS READING YOU?</span>
+        </h1>
+
+        <p class="s1-tagline" id="s1Tagline">
+          “Every story feels different when it feels you.”
+        </p>
+      </div>
+
+      <!-- ================= SCENE 2: The Reader's Gaze (3.8s - 8.8s) ================= -->
+      <div id="scene-2" class="clip" data-start="3.8" data-duration="5.0">
+        <div class="hud-container" id="s2Hud">
+          <div class="hud-header">
+            <span class="hud-title">REAL-TIME BIOMETRIC ATTUNEMENT</span>
+            <div class="badge-pill" style="margin: 0">
+              <span class="status-dot"></span>
+              100% Client-Side WebAssembly · Zero Video Uploads
+            </div>
+          </div>
+
+          <div class="hud-body">
+            <div class="face-viewport">
+              <svg class="face-wireframe" viewBox="0 0 200 240" fill="none">
+                <!-- Face Oval Wireframe -->
+                <ellipse cx="100" cy="120" rx="70" ry="95" stroke="#d49b43" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.6" />
+                <path d="M 60 90 Q 75 80 90 90" stroke="#f5c46b" stroke-width="2" stroke-linecap="round" />
+                <path d="M 110 90 Q 125 80 140 90" stroke="#f5c46b" stroke-width="2" stroke-linecap="round" />
+                <!-- Eyes Wide -->
+                <circle cx="75" cy="105" r="14" stroke="#f5c46b" stroke-width="2" />
+                <circle cx="75" cy="105" r="5" fill="#ffffff" />
+                <circle cx="125" cy="105" r="14" stroke="#f5c46b" stroke-width="2" />
+                <circle cx="125" cy="105" r="5" fill="#ffffff" />
+                <!-- Nose Bridge -->
+                <path d="M 100 100 L 97 135 L 105 138" stroke="#d49b43" stroke-width="1.5" />
+                <!-- Surprised Mouth -->
+                <ellipse cx="100" cy="170" rx="16" ry="22" stroke="#f5c46b" stroke-width="2.5" />
+                <!-- Grid Crosshairs -->
+                <line x1="30" y1="105" x2="170" y2="105" stroke="rgba(212,155,67,0.2)" stroke-width="1" />
+                <line x1="100" y1="30" x2="100" y2="210" stroke="rgba(212,155,67,0.2)" stroke-width="1" />
+              </svg>
+            </div>
+
+            <div class="telemetry-panel">
+              <div class="telemetry-row">
+                <div class="telemetry-label">
+                  <span>AU05 · EYE WIDE (ATTENTION SPIKE)</span>
+                  <span id="au05Val">91%</span>
+                </div>
+                <div class="telemetry-bar-bg">
+                  <div class="telemetry-bar-fill" id="au05Bar" style="width: 91%"></div>
+                </div>
+              </div>
+
+              <div class="telemetry-row">
+                <div class="telemetry-label">
+                  <span>AU01+AU02 · INNER BROW RAISE</span>
+                  <span id="au01Val">86%</span>
+                </div>
+                <div class="telemetry-bar-bg">
+                  <div class="telemetry-bar-fill" id="au01Bar" style="width: 86%"></div>
+                </div>
+              </div>
+
+              <div class="telemetry-row">
+                <div class="telemetry-label">
+                  <span>AU26 · JAW OPEN (BREATH INTAKE)</span>
+                  <span id="au26Val">74%</span>
+                </div>
+                <div class="telemetry-bar-bg">
+                  <div class="telemetry-bar-fill" id="au26Bar" style="width: 74%"></div>
+                </div>
+              </div>
+
+              <div class="decision-box" id="s2Decision">
+                <div class="decision-status">● CUE DETECTED: SURPRISED · CONFIDENCE: 91%</div>
+                <div class="decision-directive">
+                  PROMPT DIRECTIVE: Unveil a concealed structural truth. Invert previous assumptions and introduce a bittersweet sacrifice.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 3: Gemini Generation (8.6s - 15.0s) ================= -->
+      <div id="scene-3" class="clip" data-start="8.6" data-duration="6.4">
+        <div class="book-container" id="s3Book">
+          <div class="book-header">
+            <span class="book-chapter">CHAPTER I — THE SALT KEEPER</span>
+            <div class="gemini-pill">
+              <span class="status-dot" style="background-color: var(--violet); box-shadow: 0 0 10px var(--violet)"></span>
+              Google Gemini 2.5 Flash · Dynamic Paragraph Synthesis
+            </div>
+          </div>
+
+          <div class="prose-content">
+            <span class="drop-cap" id="s3DropCap">W</span>
+            <span id="s3Prose">
+              hen Mira angled the parchment toward the prism lamp, secret iron-gall ink bloomed across the fibers—inverting the ledger and uncovering a dry passage beneath the sea wall.
+            </span>
+          </div>
+
+          <div class="soundscape-bar" data-layout-ignore="true">
+            <span class="soundscape-label">PROCEDURAL WEB AUDIO SOUNDSCAPE</span>
+            <svg width="220" height="30" viewBox="0 0 220 30" fill="none">
+              <path d="M0 15 Q 15 2, 30 15 T 60 15 T 90 15 T 120 15 T 150 15 T 180 15 T 210 15" stroke="#d49b43" stroke-width="2" />
+            </svg>
+            <span class="soundscape-active" id="s3AudioStatus">MODULATING HARMONICS: Cmaj9 → Am7 (3.0s Glide)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SCENE 4: Emotional Arc & Outro (14.8s - 20.0s) ================= -->
+      <div id="scene-4" class="clip" data-start="14.8" data-duration="5.2">
+        <div class="outro-container" id="s4Outro">
+          <div class="arc-card" id="s4ArcCard">
+            <div class="arc-header">
+              <span class="arc-title">KURT VONNEGUT EMOTIONAL ARC TRAJECTORY</span>
+              <span class="soundscape-label" data-layout-ignore="true">STORY PROGRESS VS READER VALENCE</span>
+            </div>
+
+            <div class="arc-canvas-box">
+              <svg width="100%" height="280" viewBox="0 0 1200 280" fill="none">
+                <!-- Grid Lines -->
+                <line x1="50" y1="50" x2="1150" y2="50" stroke="rgba(255,255,255,0.05)" />
+                <line x1="50" y1="140" x2="1150" y2="140" stroke="rgba(212,155,67,0.2)" stroke-dasharray="6 6" />
+                <line x1="50" y1="230" x2="1150" y2="230" stroke="rgba(255,255,255,0.05)" />
+
+                <!-- Vonnegut Curve -->
+                <path
+                  id="arcCurve"
+                  d="M 80 140 C 220 135, 340 70, 500 80 C 650 90, 780 200, 920 170 C 1020 150, 1080 70, 1140 60"
+                  stroke="url(#arcGradient)"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                />
+
+                <!-- Marker Nodes -->
+                <circle cx="80" cy="140" r="8" fill="#d49b43" />
+                <text x="70" y="170" fill="#a49eab" font-family="'JetBrains Mono'" font-size="14">§1 BASELINE</text>
+
+                <circle cx="500" cy="80" r="8" fill="#f5c46b" />
+                <text x="460" y="55" fill="#f5c46b" font-family="'JetBrains Mono'" font-size="14">§3 SURPRISE (91%)</text>
+
+                <circle cx="920" cy="170" r="8" fill="#9d84e8" />
+                <text x="880" y="205" fill="#9d84e8" font-family="'JetBrains Mono'" font-size="14">§6 BITTERSWEET</text>
+
+                <circle cx="1140" cy="60" r="9" fill="#34d399" />
+                <text x="1080" y="40" fill="#34d399" font-family="'JetBrains Mono'" font-size="14">§8 CATHARSIS</text>
+
+                <defs>
+                  <linearGradient id="arcGradient" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#d49b43" />
+                    <stop offset="45%" stop-color="#f5c46b" />
+                    <stop offset="75%" stop-color="#9d84e8" />
+                    <stop offset="100%" stop-color="#34d399" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+          </div>
+
+          <div class="brand-outro">
+            <h2 class="brand-title" id="s4BrandTitle">E M O T I V E</h2>
+            <p class="brand-tagline">“Every story feels different when it feels you.”</p>
+            <div class="cta-pills">
+              <div class="cta-live">
+                <span>▶ emotive-omega.vercel.app</span>
+              </div>
+              <div class="cta-github">
+                <span>★ github.com/iamnih4l/Emotive</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= GSAP SEEKABLE ANIMATION SCRIPT ================= -->
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // Ambient background breathing
+      tl.to("#bgAura", { scale: 1.15, opacity: 0.9, duration: 10, repeat: 1, yoyo: true, ease: "sine.inOut" }, 0);
+
+      // --- SCENE 1 (0.0s - 4.0s) ---
+      // Keep title and beacon visible on frame 0 for instant thumbnail impact
+      tl.fromTo("#s1Pill", { opacity: 0.9, y: 0 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0);
+      tl.fromTo("#s1Beacon", { opacity: 0.9, scale: 0.92, rotation: 0 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.7)" }, 0);
+      tl.fromTo("#s1Headline", { opacity: 0.92, scale: 0.98 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power4.out" }, 0);
+      tl.fromTo("#s1Tagline", { opacity: 0.8, y: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 0.5);
+      tl.to("#scene-1", { opacity: 0, scale: 1.05, filter: "blur(6px)", duration: 0.4, ease: "power2.in" }, 3.5);
+
+      // --- SCENE 2 (3.8s - 8.8s) ---
+      tl.fromTo("#s2Hud", { opacity: 0, scale: 0.94, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "power3.out" }, 3.8);
+      tl.fromTo(".face-wireframe", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, 4.3);
+      tl.fromTo("#au05Bar", { width: "10%" }, { width: "91%", duration: 1.2, ease: "power2.out" }, 4.6);
+      tl.fromTo("#au01Bar", { width: "15%" }, { width: "86%", duration: 1.2, ease: "power2.out" }, 4.8);
+      tl.fromTo("#au26Bar", { width: "5%" }, { width: "74%", duration: 1.2, ease: "power2.out" }, 5.0);
+      tl.fromTo("#s2Decision", { opacity: 0, scale: 0.95, borderColor: "transparent" }, { opacity: 1, scale: 1, borderColor: "#d49b43", duration: 0.5, ease: "back.out(1.5)" }, 5.8);
+      tl.to("#s2Hud", { opacity: 0, scale: 1.04, duration: 0.4, ease: "power2.in" }, 8.4);
+
+      // --- SCENE 3 (8.6s - 15.0s) ---
+      tl.fromTo("#s3Book", { opacity: 0, y: 40, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" }, 8.7);
+      tl.fromTo("#s3DropCap", { opacity: 0, scale: 0.5, rotation: -10 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2)" }, 9.3);
+      tl.fromTo("#s3Prose", { opacity: 0 }, { opacity: 1, duration: 1.5, ease: "power1.out" }, 9.6);
+      tl.fromTo("#s3AudioStatus", { color: "#a49eab" }, { color: "#f5c46b", duration: 0.8, ease: "power2.out" }, 11.5);
+      tl.to("#s3Book", { opacity: 0, scale: 1.03, duration: 0.4, ease: "power2.in" }, 14.6);
+
+      // --- SCENE 4 (14.8s - 20.0s) ---
+      tl.fromTo("#s4Outro", { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 14.9);
+      tl.fromTo("#arcCurve", { strokeDasharray: 1500, strokeDashoffset: 1500 }, { strokeDashoffset: 0, duration: 1.8, ease: "power2.inOut" }, 15.2);
+      tl.fromTo(".brand-title", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 16.5);
+      tl.fromTo(".brand-tagline", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 17.0);
+      tl.fromTo(".cta-pills", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, 17.4);
+
+      // Register root timeline on window.__timelines
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
