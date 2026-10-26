@@ -17,6 +17,10 @@
 </p>
 
 <p align="center">
+  <a href="https://emotive-omega.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/▶_Live_Demo-emotive--omega.vercel.app-d49b43?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
+  </a>
+  &nbsp;&nbsp;
   <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fiamnih4l%2FEmotive&env=GEMINI_API_KEY&envDescription=Google%20AI%20Studio%20Gemini%20API%20Key&envLink=https%3A%2F%2Faistudio.google.com%2Fapp%2Fapikey">
     <img src="https://vercel.com/button" alt="Deploy with Vercel" />
   </a>
@@ -223,9 +227,13 @@ On the conclusion screen, EMOTIVE renders an interactive **Kurt Vonnegut Narrati
 
 ---
 
-## 🚀 Quick Start Guide
+## 🚀 Quick Start & Live Experience
+ 
+### 🌐 Experience It Online
+You can experience EMOTIVE immediately in your browser without cloning or running any local code:
+**[https://emotive-omega.vercel.app/](https://emotive-omega.vercel.app/)**
 
-### Prerequisites
+### Local Development Setup
 - [Node.js](https://nodejs.org/) v18.0.0 or higher
 - Modern browser with webcam support (Chrome, Edge, Brave, Firefox, Safari)
 
