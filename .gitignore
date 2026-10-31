@@ -29,3 +29,9 @@ dist/
 brag-output/composition/node_modules/
 brag-output/composition/.hyperframes/
 brag-output/composition/bin/
+
+# LaTeX auxiliary builds
+paper/*.aux
+paper/*.out
+paper/*.log
+paper/arxiv_package/

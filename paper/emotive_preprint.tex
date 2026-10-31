@@ -7,10 +7,11 @@
 
 \title{EMOTIVE: A Closed-Loop Affective Narrative System (CLANS) Using In-Browser Facial Blendshapes and Procedural Soundscapes}
 
-\author{Nihal}
-\email{nihal@example.org}
+\author{Mohammed Nihal}
+\email{nihalnihz95@gmail.com}
 \affiliation{%
-  \institution{Department of Computer Science \& Artificial Intelligence}
+  \institution{Independent Researcher}
+  \city{Kozhikode}
   \country{India}
 }
 
@@ -30,7 +31,7 @@ Generative artificial intelligence has democratized the on-demand creation of lo
 
 In live human storytelling, by contrast, a master orator never speaks in a vacuum. A storyteller constantly observes the audience's subtle bodily cues: a furrowed brow, an involuntary gasp, a leaning forward in suspense, or a fleeting smirk. These involuntary micro-expressions provide continuous affective feedback that guides the speaker's vocal cadence, tension, and thematic emphasis.
 
-\subsection{Challenges of Browser-Based Affective Systems}
+\subsection{Challenges of Browser Affective Systems}
 
 Bringing closed-loop affective feedback to consumer web browsers presents three severe technical and design challenges:
 \begin{enumerate}
@@ -43,16 +44,16 @@ Bringing closed-loop affective feedback to consumer web browsers presents three 
 
 In this work, we present \textbf{EMOTIVE}, addressing each challenge through the following contributions:
 \begin{itemize}
-    \item \textbf{Zero-Install Client-Side Affective Pipeline}: An in-browser WebAssembly (WASM) vision pipeline utilizing GPU-accelerated MediaPipe FaceLandmarker to infer 52 FACS blendshapes and categorize six primary affective states (\texttt{HAPPY}, \texttt{SAD}, \texttt{SURPRISED}, \texttt{FEAR}, \texttt{ANGRY}, \texttt{NEUTRAL}) at $\approx 10\text{ Hz}$ with zero server transmission.
-    \item \textbf{Dual-Stage Noise Rejection}: A mathematical formulation combining Exponential Moving Average smoothing ($\alpha = 0.22$) with a dynamic hysteresis boundary ($\delta = 0.09$) and observation window accumulation, eliminating blink artifacts while preserving response latency under $450\text{ ms}$.
-    \item \textbf{Psychological Counterpoint Narrative Architecture}: A structured prompting engine that steers LLM paragraph generation (Google Gemini 2.5 Flash) using literary counterpoint principles rather than direct mirroring, maintaining strict continuity, character agency, and multi-beat emotional trajectories.
-    \item \textbf{Procedural Multi-Sensory Web Audio Engine}: A self-contained Web Audio synthesis system that dynamically cross-fades 4-voice harmonic ambient pads and resonant biquad filter cutoffs in real time without external audio samples or network overhead.
-    \item \textbf{Empirical Research Telemetry \& Study Protocol}: A lightweight, anonymous telemetry instrumentation system tracking word-per-minute (WPM) reading dwell times, emotional transitions, and integrated post-reading Likert scales.
+    \item \textbf{Zero-Install Client-Side Vision}: An in-browser WebAssembly (WASM) vision pipeline utilizing GPU-accelerated MediaPipe FaceLandmarker to infer 52 FACS blendshapes and categorize six primary affective states (\texttt{HAPPY}, \texttt{SAD}, \texttt{SURPRISED}, \texttt{FEAR}, \texttt{ANGRY}, \texttt{NEUTRAL}) at $\approx 10\text{ Hz}$ with zero server transmission.
+    \item \textbf{Dual-Stage Noise Rejection}: A mathematical formulation combining Exponential Moving Average smoothing ($\alpha = 0.22$) with a dynamic hysteresis boundary ($\delta = 0.09$) and observation window accumulation, eliminating blink artifacts while preserving response latency under $400\text{ ms}$.
+    \item \textbf{Psychological Counterpoint}: A structured prompting engine that steers LLM paragraph generation (Google Gemini 2.5 Flash) using literary counterpoint principles rather than direct mirroring, maintaining strict continuity, character agency, and multi-beat emotional trajectories.
+    \item \textbf{Procedural Web Audio Engine}: A self-contained Web Audio synthesis system that dynamically cross-fades 4-voice harmonic ambient pads and resonant biquad filter cutoffs in real time without external audio samples or network overhead.
+    \item \textbf{Empirical Research Telemetry}: A lightweight, anonymous telemetry instrumentation system tracking word-per-minute (WPM) reading dwell times, emotional transitions, and integrated post-reading Likert scales.
 \end{itemize}
 
 \section{Related Work}
 
-\subsection{Affective Computing \& FACS Blendshapes}
+\subsection{Affective Computing \& Blendshapes}
 Ekman and Friesen's Facial Action Coding System (FACS) \cite{ekman1978facial} remains the foundational standard for decomposing facial motion into individual Action Units (AUs). Rosalind Picard's seminal work on Affective Computing \cite{picard2000affective} established the necessity of empathetic computational interfaces. While early systems required specialized multi-spectral cameras or intrusive physiological sensors (GSR, ECG), recent advances in deep learning landmarker architectures---specifically Google's MediaPipe \cite{lugaresi2019mediapipe}---allow real-time 3D facial mesh estimation and 52-blendshape decomposition directly inside web browsers via WebAssembly and WebGL/WebGPU.
 
 \subsection{Interactive Narrative \& LLM Steering}
@@ -67,15 +68,15 @@ The EMOTIVE architecture operates across three distinct tiers: (1) client-side i
 
 \subsection{In-Browser Vision \& FACS Blendshapes}
 
-EMOTIVE accesses the reader's local webcam via standard \texttt{getUserMedia} constrained to $480 \times 360$ at 30 FPS. Frames are processed by \texttt{@mediapipe/tasks-vision} loaded in a WebAssembly worker with GPU delegate acceleration. The landmarker yields 52 normalized blendshape coefficients $b_k \in [0, 1]$.
+EMOTIVE accesses the reader's local webcam via standard \texttt{getUserMedia} constrained to $480 \times 360$ at 30 FPS. Frames are processed by \texttt{@mediapipe/tasks-vision} loaded in a WebAssembly worker with GPU acceleration. The landmarker yields 52 normalized blendshape coefficients $b_k \in [0, 1]$.
 
 We map raw blendshapes to six primary emotional categories via empirical Action Unit combinations:
 \begin{align}
-S_{\text{happy}} &= \min\left(1.0, \, 1.45 \cdot \bar{b}_{\text{smile}} + 0.55 \cdot \bar{b}_{\text{cheekSquint}}\right) \\
-S_{\text{sad}} &= \min\left(1.0, \, 1.30 \cdot \bar{b}_{\text{frown}} + 0.85 \cdot b_{\text{browInnerUp}} + 0.35 \cdot \bar{b}_{\text{mouthPress}}\right) \\
-S_{\text{surprised}} &= \min\left(1.0, \, 0.85 \cdot (1.1 \bar{b}_{\text{eyeWide}} + 0.9 \bar{b}_{\text{browOuterUp}} + 1.1 b_{\text{jawOpen}})\right) \\
-S_{\text{fear}} &= \min\left(1.0, \, 0.85 \cdot \bar{b}_{\text{eyeWide}} + 0.90 \cdot b_{\text{browInnerUp}} + 0.95 \cdot \bar{b}_{\text{mouthStretch}}\right) \\
-S_{\text{angry}} &= \min\left(1.0, \, 1.35 \cdot \bar{b}_{\text{browDown}} + 0.70 \cdot \bar{b}_{\text{noseSneer}} + 0.65 \cdot \bar{b}_{\text{mouthPress}}\right)
+S_{\text{happy}} &= \min(1.0, \, 1.45 \cdot \bar{b}_{\text{smile}} + 0.55 \cdot \bar{b}_{\text{cheekSquint}}) \\
+S_{\text{sad}} &= \min(1.0, \, 1.30 \cdot \bar{b}_{\text{frown}} + 0.85 \cdot b_{\text{browInnerUp}} + 0.35 \cdot \bar{b}_{\text{mouthPress}}) \\
+S_{\text{surp}} &= \min(1.0, \, 0.94 \cdot \bar{b}_{\text{eyeWide}} + 0.77 \cdot \bar{b}_{\text{browOuterUp}} + 0.94 \cdot b_{\text{jawOpen}}) \\
+S_{\text{fear}} &= \min(1.0, \, 0.85 \cdot \bar{b}_{\text{eyeWide}} + 0.90 \cdot b_{\text{browInnerUp}} + 0.95 \cdot \bar{b}_{\text{mouthStretch}}) \\
+S_{\text{angry}} &= \min(1.0, \, 1.35 \cdot \bar{b}_{\text{browDown}} + 0.70 \cdot \bar{b}_{\text{noseSneer}} + 0.65 \cdot \bar{b}_{\text{mouthPress}})
 \end{align}
 where bilateral blendshapes are averaged: $\bar{b}_{\text{smile}} = \frac{1}{2}(b_{\text{smileL}} + b_{\text{smileR}})$.
 
@@ -121,7 +122,7 @@ Rather than naively reflecting the reader's state, EMOTIVE implements a literary
 \toprule
 \textbf{Sensed Affect} & \textbf{Naive Mirroring} & \textbf{Counterpoint (EMOTIVE)} \\
 \midrule
-\texttt{HAPPY} & Cheerful joke & Bittersweet nuance, vulnerable cost \\
+\texttt{HAPPY} & Cheerful joke & Bittersweet nuance, poignant cost \\
 \texttt{SAD} & Melodramatic grief & Solace, unexpected relic of hope \\
 \texttt{SURPRISED} & Over-explanation & Narrative twist reframing prior clues \\
 \texttt{FEAR} & Shock horror & Atmospheric suspense, moral choice \\
@@ -191,67 +192,67 @@ Future work will expand the system to multi-reader collective narratives, integr
 
 \begin{thebibliography}{10}
 
-\bibitem{brown2020language}
+\bibitem[Brown et~al.(2020)]{brown2020language}
 Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared~D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et~al. 2020.
 \newblock Language models are few-shot learners.
 \newblock {\em Advances in Neural Information Processing Systems}, 33:1877--1901.
 
-\bibitem{chung2022talebrush}
+\bibitem[Chung et~al.(2022)]{chung2022talebrush}
 John~Qian Chung, Eytan Adar, and Minsuk Kahng. 2022.
 \newblock TaleBrush: Sketching stories with generative pretrained language models.
 \newblock In {\em Proceedings of the 2022 CHI Conference on Human Factors in Computing Systems}, pages 1--19.
 
-\bibitem{cohen2001music}
+\bibitem[Cohen(2001)]{cohen2001music}
 Annabel~J Cohen. 2001.
 \newblock Music as a source of emotion in film.
 \newblock {\em Music and Emotion: Theory and Research}, pages 249--272.
 
-\bibitem{ekman1978facial}
+\bibitem[Ekman and Friesen(1978)]{ekman1978facial}
 Paul Ekman and Wallace~V Friesen. 1978.
 \newblock {\em Facial Action Coding System: A Technique for the Measurement of Facial Movement}.
 \newblock Consulting Psychologists Press, Palo Alto, CA.
 
-\bibitem{green2000transportation}
+\bibitem[Green and Brock(2000)]{green2000transportation}
 Melanie~C Green and Timothy~C Brock. 2000.
 \newblock The role of transportation in the persuasiveness of public narratives.
 \newblock {\em Journal of Personality and Social Psychology}, 79(5):701.
 
-\bibitem{lugaresi2019mediapipe}
+\bibitem[Lugaresi et~al.(2019)]{lugaresi2019mediapipe}
 Camillo Lugaresi, Jiuqiang Tang, Hadon Nash, Chris McClanahan, Esha Uboweja, Michael Hays, Fan Zhang, Chuo-Ling Chang, Ming~Guang Yong, Juhyun Lee, et~al. 2019.
 \newblock MediaPipe: A framework for building perception pipelines.
 \newblock {\em arXiv preprint arXiv:1906.08172}.
 
-\bibitem{mateas2003facade}
+\bibitem[Mateas and Stern(2003)]{mateas2003facade}
 Michael Mateas and Andrew Stern. 2003.
 \newblock Fa{\c{c}}ade: An experiment in building a fully-realized interactive drama.
 \newblock In {\em Game Developers Conference (GDC)}, volume~2.
 
-\bibitem{murray1997hamlet}
+\bibitem[Murray(1997)]{murray1997hamlet}
 Janet~Horowitz Murray. 1997.
 \newblock {\em Hamlet on the Holodeck: The Future of Narrative in Cyberspace}.
 \newblock MIT Press, Cambridge, MA.
 
-\bibitem{picard2000affective}
+\bibitem[Picard(2000)]{picard2000affective}
 Rosalind~W Picard. 2000.
 \newblock {\em Affective Computing}.
 \newblock MIT Press, Cambridge, MA.
 
-\bibitem{riedl2010narrative}
+\bibitem[Riedl and Young(2010)]{riedl2010narrative}
 Mark~O Riedl and Robert~Michael Young. 2010.
 \newblock Narrative planning: Balancing plot and character.
 \newblock {\em Journal of Artificial Intelligence Research}, 39:217--268.
 
-\bibitem{ryan2001narrative}
+\bibitem[Ryan(2001)]{ryan2001narrative}
 Marie-Laure Ryan. 2001.
 \newblock {\em Narrative as Virtual Reality: Immersion and Interactivity in Literature and Electronic Media}.
 \newblock JHU Press, Baltimore, MD.
 
-\bibitem{smus2013web}
+\bibitem[Smus(2013)]{smus2013web}
 Boris Smus. 2013.
 \newblock {\em Web Audio API: Advanced Sound for Games and Interactive Apps}.
 \newblock O'Reilly Media, Sebastopol, CA.
 
-\bibitem{vonnegut1981shapes}
+\bibitem[Vonnegut(1981)]{vonnegut1981shapes}
 Kurt Vonnegut. 1981.
 \newblock {\em Palm Sunday: An Autobiographical Collage}.
 \newblock Delacorte Press, New York, NY.

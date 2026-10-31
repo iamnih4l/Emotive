@@ -1,8 +1,8 @@
 # EMOTIVE: A Closed-Loop Affective Narrative System (CLANS) Using In-Browser Facial Blendshapes and Procedural Soundscapes
 
-**Nihal**  
-*Department of Computer Science & Artificial Intelligence*  
-`nihal@example.org` — [GitHub: iamnih4l/Emotive](https://github.com/iamnih4l/Emotive) — [Live Demo](https://emotive-omega.vercel.app/)
+**Mohammed Nihal**  
+*Independent Researcher*  
+`nihalnihz95@gmail.com` — [GitHub: iamnih4l/Emotive](https://github.com/iamnih4l/Emotive) — [Live Demo](https://emotive-omega.vercel.app/)
 
 ---
 
