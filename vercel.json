@@ -2,6 +2,7 @@
   "version": 2,
   "rewrites": [
     { "source": "/api/generate-paragraph", "destination": "/api/generate-paragraph.js" },
+    { "source": "/api/telemetry", "destination": "/api/telemetry.js" },
     { "source": "/((?!api/).*)", "destination": "/public/$1" }
   ]
 }

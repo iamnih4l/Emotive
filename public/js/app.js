@@ -55,6 +55,21 @@ const appState = {
     narrativeSummary: '',
     plotThreads: [],
     currentNarrativeDirection: 'Establish the opening atmosphere, setting, and central intrigue.'
+  },
+  telemetry: {
+    sessionId: '',
+    readingMode: 'camera',
+    sessionStartTime: 0,
+    sessionEndTime: 0,
+    currentParagraphStartTime: 0,
+    paragraphMetrics: [],
+    surveyRatings: {
+      absorption: null,
+      responsiveness: null,
+      soundscapeSynergy: null,
+      comments: ''
+    },
+    isSubmitted: false
   }
 };
 
@@ -207,7 +222,22 @@ const el = {
   evolutionTimelineList: document.getElementById('evolutionTimelineList'),
   endingFullManuscript: document.getElementById('endingFullManuscript'),
   narrativeArcCanvas: document.getElementById('narrativeArcCanvas'),
-  arcMoodDominance: document.getElementById('arcMoodDominance')
+  arcMoodDominance: document.getElementById('arcMoodDominance'),
+
+  // Research Telemetry & Likert Survey
+  researchTelemetryCard: document.getElementById('researchTelemetryCard'),
+  telemetrySessionBadge: document.getElementById('telemetrySessionBadge'),
+  telemetryMetricDuration: document.getElementById('telemetryMetricDuration'),
+  telemetryMetricPace: document.getElementById('telemetryMetricPace'),
+  telemetryMetricShifts: document.getElementById('telemetryMetricShifts'),
+  telemetryMetricDominant: document.getElementById('telemetryMetricDominant'),
+  valAbsorption: document.getElementById('valAbsorption'),
+  valAttunement: document.getElementById('valAttunement'),
+  valSynergy: document.getElementById('valSynergy'),
+  telemetryFeedbackNotes: document.getElementById('telemetryFeedbackNotes'),
+  downloadTelemetryBtn: document.getElementById('downloadTelemetryBtn'),
+  submitTelemetryBtn: document.getElementById('submitTelemetryBtn'),
+  telemetryStatusToast: document.getElementById('telemetryStatusToast')
 };
 
 // ---------------------------------------------------------------------------
@@ -342,6 +372,7 @@ function initializeStoryStateFromConfig() {
 async function launchStorySession(withCamera) {
   el.cameraConsentModal.classList.add('hidden');
   initializeStoryStateFromConfig();
+  initTelemetrySession(withCamera);
   switchScreen('reading');
 
   // Start soundscape if enabled
@@ -442,6 +473,7 @@ function commitGeneratedParagraph(result, signal, isFinalParagraph, usedEngineLa
     if (s.plotThreads.length > 4) s.plotThreads.shift();
   }
   s.currentNarrativeDirection = entry.plotDevelopment;
+  recordParagraphTelemetry(paragraphNum, signal, entry);
 
   // Manage emotional cooldown
   if (paragraphNum > 1 && ['HAPPY', 'SAD', 'SURPRISED', 'FEAR', 'ANGRY'].includes(signal.apparentExpression) && signal.sufficientEvidence && !signal.cooldownActive) {
@@ -590,6 +622,7 @@ function updateReadingProgressBarUI() {
 
 function showEndingScreen() {
   stopReadingIntervalTimer();
+  finalizeSessionTelemetry();
   const s = appState.story;
   switchScreen('ending');
 
@@ -604,6 +637,9 @@ function showEndingScreen() {
 
   // Draw Interactive Narrative Emotional Arc
   drawNarrativeArc(s.paragraphs, el.narrativeArcCanvas, el.arcMoodDominance);
+
+  // Render Research Telemetry Summary
+  renderTelemetrySummaryUI();
 
   el.evolutionTimelineList.innerHTML = s.paragraphs.map(p => `
     <div class="rounded-xl border border-ivory-300/10 bg-midnight-950/70 p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -761,6 +797,311 @@ function drawNarrativeArc(paragraphs, canvas, dominanceEl) {
     ctx.font = '10px "JetBrains Mono", monospace';
     ctx.textAlign = 'center';
     ctx.fillText(`§${pt.p.index}`, pt.x, pt.y - 12);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// AFFECTIVE COMPUTING RESEARCH & USER TELEMETRY SYSTEM
+// ---------------------------------------------------------------------------
+
+function initTelemetrySession(withCamera) {
+  const now = Date.now();
+  const rand = Math.random().toString(36).substring(2, 8);
+  appState.telemetry = {
+    sessionId: `emotive_${now}_${rand}`,
+    readingMode: withCamera ? 'camera' : 'manual',
+    sessionStartTime: now,
+    sessionEndTime: 0,
+    currentParagraphStartTime: now,
+    paragraphMetrics: [],
+    surveyRatings: {
+      absorption: null,
+      responsiveness: null,
+      soundscapeSynergy: null,
+      comments: ''
+    },
+    isSubmitted: false
+  };
+}
+
+function recordParagraphTelemetry(paragraphNum, signal, entry) {
+  const s = appState.story;
+  if (!appState.telemetry || !appState.telemetry.sessionId) return;
+
+  if (paragraphNum > 1 && s.paragraphs.length > 0) {
+    const prevIndex = paragraphNum - 2;
+    const prevParagraph = s.paragraphs[prevIndex];
+    const words = (prevParagraph?.text || '').split(/\s+/).filter(Boolean).length;
+    const now = Date.now();
+    const dwell = Math.max(1, Math.round(((now - appState.telemetry.currentParagraphStartTime) / 1000) * 10) / 10);
+    const wpm = dwell > 0 ? Math.round((words / (dwell / 60))) : 0;
+
+    appState.telemetry.paragraphMetrics.push({
+      index: prevParagraph ? prevParagraph.index : paragraphNum - 1,
+      dwellSeconds: dwell,
+      wordCount: words,
+      readingWpm: wpm,
+      triggerExpression: signal.apparentExpression || 'NEUTRAL',
+      triggerConfidence: Math.round((signal.confidence || 0) * 100) / 100,
+      triggerTrend: signal.trend || 'Steady',
+      triggerSource: signal.source || appState.telemetry.readingMode,
+      moodResult: prevParagraph ? prevParagraph.mood : '',
+      adaptationApplied: Boolean(signal.apparentExpression !== 'NEUTRAL' && signal.apparentExpression !== 'UNCERTAIN')
+    });
+  }
+
+  appState.telemetry.currentParagraphStartTime = Date.now();
+}
+
+function finalizeSessionTelemetry() {
+  const s = appState.story;
+  if (!appState.telemetry || !appState.telemetry.sessionId) {
+    initTelemetrySession(visionProcessor.enabled);
+  }
+
+  const lastParaIndex = s.paragraphs.length;
+  if (lastParaIndex > 0 && appState.telemetry.paragraphMetrics.length < lastParaIndex) {
+    const lastEntry = s.paragraphs[lastParaIndex - 1];
+    const words = (lastEntry.text || '').split(/\s+/).filter(Boolean).length;
+    const now = Date.now();
+    const dwell = Math.max(1, Math.round(((now - appState.telemetry.currentParagraphStartTime) / 1000) * 10) / 10);
+    const wpm = dwell > 0 ? Math.round((words / (dwell / 60))) : 0;
+
+    appState.telemetry.paragraphMetrics.push({
+      index: lastEntry.index,
+      dwellSeconds: dwell,
+      wordCount: words,
+      readingWpm: wpm,
+      triggerExpression: lastEntry.triggerExpression || 'NEUTRAL',
+      triggerConfidence: Math.round((lastEntry.triggerConfidence || 1) * 100) / 100,
+      triggerTrend: lastEntry.triggerTrend || 'Final',
+      triggerSource: appState.telemetry.readingMode,
+      moodResult: lastEntry.mood || '',
+      adaptationApplied: Boolean(lastEntry.triggerExpression !== 'NEUTRAL' && lastEntry.triggerExpression !== 'UNCERTAIN' && lastEntry.triggerExpression !== 'OPENING SEED')
+    });
+  }
+
+  appState.telemetry.sessionEndTime = Date.now();
+}
+
+function compileTelemetryPayload() {
+  const s = appState.story;
+  const tel = appState.telemetry;
+  const durationSec = Math.max(1, Math.round(((tel.sessionEndTime || Date.now()) - tel.sessionStartTime) / 1000));
+  const totalDwell = tel.paragraphMetrics.reduce((sum, p) => sum + (p.dwellSeconds || 0), 0);
+  const avgDwell = tel.paragraphMetrics.length > 0 ? Math.round((totalDwell / tel.paragraphMetrics.length) * 10) / 10 : 0;
+
+  // Emotion breakdown
+  const emotionCounts = {};
+  s.paragraphs.forEach(p => {
+    const cue = p.triggerExpression || 'NEUTRAL';
+    if (cue !== 'OPENING SEED') {
+      emotionCounts[cue] = (emotionCounts[cue] || 0) + 1;
+    }
+  });
+
+  return {
+    sessionId: tel.sessionId,
+    timestamp: new Date(tel.sessionStartTime).toISOString(),
+    readingMode: tel.readingMode,
+    storyMetadata: {
+      storyId: s.storyId,
+      title: s.title || 'Untitled',
+      genre: s.genre,
+      style: s.style,
+      adaptationIntensity: s.adaptationIntensity,
+      soundPreset: el.soundPresetSelect ? el.soundPresetSelect.value : 'eventide',
+      readingPace: appState.readingPace,
+      desiredLength: s.desiredLength,
+      actualParagraphs: s.paragraphs.length
+    },
+    sessionTiming: {
+      sessionStartTime: tel.sessionStartTime,
+      sessionEndTime: tel.sessionEndTime || Date.now(),
+      totalDurationSeconds: durationSec,
+      averageDwellPerParagraphSeconds: avgDwell
+    },
+    paragraphMetrics: tel.paragraphMetrics,
+    emotionDistribution: emotionCounts,
+    surveyRatings: {
+      absorption: tel.surveyRatings.absorption,
+      responsiveness: tel.surveyRatings.responsiveness,
+      soundscapeSynergy: tel.surveyRatings.soundscapeSynergy,
+      comments: el.telemetryFeedbackNotes ? el.telemetryFeedbackNotes.value.trim() : ''
+    },
+    clientMeta: {
+      screenResolution: `${window.innerWidth}x${window.innerHeight}`,
+      userAgentCategory: navigator.userAgent.slice(0, 80)
+    }
+  };
+}
+
+function renderTelemetrySummaryUI() {
+  const tel = appState.telemetry;
+  const s = appState.story;
+  if (!tel || !el.telemetrySessionBadge) return;
+
+  el.telemetrySessionBadge.textContent = `Session: #${tel.sessionId}`;
+
+  const durationSec = Math.max(0, Math.round(((tel.sessionEndTime || Date.now()) - tel.sessionStartTime) / 1000));
+  const mins = Math.floor(durationSec / 60);
+  const secs = durationSec % 60;
+  el.telemetryMetricDuration.textContent = `${mins}m ${secs < 10 ? '0' : ''}${secs}s`;
+
+  const totalDwell = tel.paragraphMetrics.reduce((acc, p) => acc + (p.dwellSeconds || 0), 0);
+  const avgPace = tel.paragraphMetrics.length > 0 ? (totalDwell / tel.paragraphMetrics.length).toFixed(1) : '0.0';
+  el.telemetryMetricPace.textContent = `${avgPace}s / §`;
+
+  const shifts = tel.paragraphMetrics.filter(p => p.adaptationApplied).length;
+  el.telemetryMetricShifts.textContent = `${shifts} shift${shifts === 1 ? '' : 's'}`;
+
+  // Find dominant emotion
+  const emotionCounts = {};
+  s.paragraphs.forEach(p => {
+    const cue = p.triggerExpression;
+    if (cue && cue !== 'OPENING SEED' && cue !== 'UNCERTAIN') {
+      emotionCounts[cue] = (emotionCounts[cue] || 0) + 1;
+    }
+  });
+  let maxEmotion = 'NEUTRAL';
+  let maxCount = 0;
+  let totalTracked = 0;
+  for (const [em, count] of Object.entries(emotionCounts)) {
+    totalTracked += count;
+    if (count > maxCount) {
+      maxCount = count;
+      maxEmotion = em;
+    }
+  }
+  const pct = totalTracked > 0 ? Math.round((maxCount / totalTracked) * 100) : 100;
+  el.telemetryMetricDominant.textContent = totalTracked > 0 ? `${maxEmotion} (${pct}%)` : 'NEUTRAL';
+
+  // Reset survey buttons and fields if not already submitted
+  if (!tel.isSubmitted) {
+    document.querySelectorAll('.likert-btn').forEach(btn => btn.classList.remove('selected'));
+    if (el.valAbsorption) el.valAbsorption.textContent = 'Unrated';
+    if (el.valAttunement) el.valAttunement.textContent = 'Unrated';
+    if (el.valSynergy) el.valSynergy.textContent = 'Unrated';
+    if (el.telemetryFeedbackNotes) el.telemetryFeedbackNotes.value = '';
+    if (el.submitTelemetryBtn) {
+      el.submitTelemetryBtn.disabled = false;
+      el.submitTelemetryBtn.className = 'px-5 py-2 rounded-xl border border-amber-450 bg-amber-450 hover:bg-amber-350 text-midnight-950 text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-2';
+      el.submitTelemetryBtn.innerHTML = `
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Submit Telemetry</span>
+      `;
+    }
+    if (el.telemetryStatusToast) el.telemetryStatusToast.classList.add('hidden');
+  }
+}
+
+async function submitTelemetryData() {
+  if (appState.telemetry.isSubmitted) return;
+
+  const payload = compileTelemetryPayload();
+  if (el.submitTelemetryBtn) {
+    el.submitTelemetryBtn.disabled = true;
+    el.submitTelemetryBtn.innerHTML = `
+      <svg class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+      </svg>
+      <span>Logging...</span>
+    `;
+  }
+
+  try {
+    const res = await fetch('/api/telemetry', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    appState.telemetry.isSubmitted = true;
+    if (el.submitTelemetryBtn) {
+      el.submitTelemetryBtn.className = 'px-5 py-2 rounded-xl border border-emerald-500/40 bg-emerald-500/20 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-2';
+      el.submitTelemetryBtn.innerHTML = `
+        <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Telemetry Recorded ✓</span>
+      `;
+    }
+
+    if (el.telemetryStatusToast) {
+      el.telemetryStatusToast.classList.remove('hidden');
+      setTimeout(() => {
+        el.telemetryStatusToast.classList.add('hidden');
+      }, 7000);
+    }
+  } catch (err) {
+    console.warn('Telemetry submission failed:', err);
+    if (el.submitTelemetryBtn) {
+      el.submitTelemetryBtn.disabled = false;
+      el.submitTelemetryBtn.innerHTML = `
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span>Retry Submit</span>
+      `;
+    }
+    alert(`Telemetry could not be transmitted to server (${err.message}). You can use "Export Telemetry (.json)" to download your session record locally.`);
+  }
+}
+
+function downloadTelemetryJson() {
+  const payload = compileTelemetryPayload();
+  const jsonStr = JSON.stringify(payload, null, 2);
+  const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `emotive-telemetry-${payload.sessionId || 'session'}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+const LIKERT_LABELS = {
+  1: '1 / 5 (Strongly Disagree)',
+  2: '2 / 5 (Disagree)',
+  3: '3 / 5 (Neutral)',
+  4: '4 / 5 (Agree)',
+  5: '5 / 5 (Strongly Agree)'
+};
+
+function setupLikertSurveyListeners() {
+  document.querySelectorAll('[data-survey-group]').forEach(groupEl => {
+    const groupName = groupEl.getAttribute('data-survey-group');
+    const buttons = groupEl.querySelectorAll('.likert-btn');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = Number(btn.getAttribute('data-val'));
+        buttons.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        if (appState.telemetry && appState.telemetry.surveyRatings) {
+          appState.telemetry.surveyRatings[groupName] = val;
+        }
+
+        const labelText = LIKERT_LABELS[val] || `${val} / 5`;
+        if (groupName === 'absorption' && el.valAbsorption) {
+          el.valAbsorption.textContent = labelText;
+        } else if (groupName === 'responsiveness' && el.valAttunement) {
+          el.valAttunement.textContent = labelText;
+        } else if (groupName === 'soundscapeSynergy' && el.valSynergy) {
+          el.valSynergy.textContent = labelText;
+        }
+      });
+    });
   });
 }
 
@@ -1176,6 +1517,15 @@ function attachEventListeners() {
   if (el.copyShareCardBtn) {
     el.copyShareCardBtn.addEventListener('click', copyStoryShareCard);
   }
+
+  // Research Telemetry Actions & Survey
+  if (el.submitTelemetryBtn) {
+    el.submitTelemetryBtn.addEventListener('click', submitTelemetryData);
+  }
+  if (el.downloadTelemetryBtn) {
+    el.downloadTelemetryBtn.addEventListener('click', downloadTelemetryJson);
+  }
+  setupLikertSurveyListeners();
 
   el.continueFromEndingBtn.addEventListener('click', () => {
     appState.story.desiredLength += 3;

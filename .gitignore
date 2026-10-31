@@ -7,12 +7,13 @@ package-lock.json
 .env.local
 .env.*.local
 
-# Logs
+# Logs & Telemetry
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+telemetry/*.jsonl
 
 # System files
 .DS_Store
@@ -22,6 +23,7 @@ Thumbs.db
 .vercel
 .netlify
 dist/
+.agents/
 
 # Brag composition build caches
 brag-output/composition/node_modules/

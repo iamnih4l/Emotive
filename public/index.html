@@ -720,6 +720,137 @@
           </div>
         </div>
 
+        <!-- Research Telemetry & Affective Evaluation Panel -->
+        <div id="researchTelemetryCard" class="rounded-2xl border border-amber-450/20 bg-midnight-900/60 p-6 sm:p-8 space-y-6 shadow-2xl backdrop-blur-md">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-ivory-300/10 pb-4">
+            <div class="space-y-1">
+              <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full border border-violet-450/30 bg-violet-450/10 text-violet-400 text-[10px] font-mono uppercase tracking-wider">
+                <span class="w-1.5 h-1.5 rounded-full bg-violet-450 animate-pulse"></span>
+                <span>Affective Computing Telemetry</span>
+              </div>
+              <h3 class="font-display text-2xl text-ivory-50">Session Research Metrics &amp; Feedback</h3>
+              <p class="text-xs text-ivory-400 font-light">
+                Empirical reading cadence, emotion transition telemetry, and reader evaluation for affective narrative research.
+              </p>
+            </div>
+            <div class="text-right">
+              <span id="telemetrySessionBadge" class="inline-block text-[11px] font-mono text-amber-350 bg-midnight-950 px-3 py-1.5 rounded-lg border border-amber-450/20">
+                Session: #emotive_init
+              </span>
+            </div>
+          </div>
+
+          <!-- Quantitative Metrics Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="rounded-xl bg-midnight-950/70 border border-ivory-300/10 p-3.5 space-y-1">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-ivory-400">Total Duration</span>
+              <p id="telemetryMetricDuration" class="text-lg font-mono font-medium text-ivory-100">0m 00s</p>
+            </div>
+            <div class="rounded-xl bg-midnight-950/70 border border-ivory-300/10 p-3.5 space-y-1">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-ivory-400">Avg Paragraph Pace</span>
+              <p id="telemetryMetricPace" class="text-lg font-mono font-medium text-amber-350">0.0s / §</p>
+            </div>
+            <div class="rounded-xl bg-midnight-950/70 border border-ivory-300/10 p-3.5 space-y-1">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-ivory-400">Affective Shifts</span>
+              <p id="telemetryMetricShifts" class="text-lg font-mono font-medium text-violet-400">0 shifts</p>
+            </div>
+            <div class="rounded-xl bg-midnight-950/70 border border-ivory-300/10 p-3.5 space-y-1">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-ivory-400">Dominant Emotion</span>
+              <p id="telemetryMetricDominant" class="text-lg font-mono font-medium text-emerald-400">NEUTRAL</p>
+            </div>
+          </div>
+
+          <!-- Research Likert Survey (1-5 Scale) -->
+          <div class="space-y-4 pt-2">
+            <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350/90">
+              Affective Experience Rating (1 = Strongly Disagree, 5 = Strongly Agree)
+            </h4>
+
+            <!-- Question 1: Narrative Absorption -->
+            <div class="p-4 rounded-xl bg-midnight-950/50 border border-ivory-300/10 space-y-2.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-ivory-200">
+                <span class="font-medium">1. Narrative Absorption: <span class="text-ivory-400 font-normal">I felt immersed in the story and lost track of time while reading.</span></span>
+                <span id="valAbsorption" class="text-[11px] font-mono text-amber-350">Unrated</span>
+              </div>
+              <div class="flex items-center gap-2" data-survey-group="absorption">
+                <button type="button" data-val="1" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">1</button>
+                <button type="button" data-val="2" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">2</button>
+                <button type="button" data-val="3" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">3</button>
+                <button type="button" data-val="4" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">4</button>
+                <button type="button" data-val="5" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">5</button>
+              </div>
+            </div>
+
+            <!-- Question 2: Affective Attunement -->
+            <div class="p-4 rounded-xl bg-midnight-950/50 border border-ivory-300/10 space-y-2.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-ivory-200">
+                <span class="font-medium">2. Affective Attunement: <span class="text-ivory-400 font-normal">The narrative felt responsive to my facial expressions and emotional cues.</span></span>
+                <span id="valAttunement" class="text-[11px] font-mono text-amber-350">Unrated</span>
+              </div>
+              <div class="flex items-center gap-2" data-survey-group="responsiveness">
+                <button type="button" data-val="1" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">1</button>
+                <button type="button" data-val="2" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">2</button>
+                <button type="button" data-val="3" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">3</button>
+                <button type="button" data-val="4" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">4</button>
+                <button type="button" data-val="5" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">5</button>
+              </div>
+            </div>
+
+            <!-- Question 3: Soundscape Synergy -->
+            <div class="p-4 rounded-xl bg-midnight-950/50 border border-ivory-300/10 space-y-2.5">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between text-xs text-ivory-200">
+                <span class="font-medium">3. Soundscape Synergy: <span class="text-ivory-400 font-normal">The real-time generative audio enhanced the emotional depth of the story.</span></span>
+                <span id="valSynergy" class="text-[11px] font-mono text-amber-350">Unrated</span>
+              </div>
+              <div class="flex items-center gap-2" data-survey-group="soundscapeSynergy">
+                <button type="button" data-val="1" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">1</button>
+                <button type="button" data-val="2" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">2</button>
+                <button type="button" data-val="3" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">3</button>
+                <button type="button" data-val="4" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">4</button>
+                <button type="button" data-val="5" class="likert-btn flex-1 py-1.5 rounded-lg border border-ivory-300/15 text-xs font-mono text-ivory-300">5</button>
+              </div>
+            </div>
+
+            <!-- Optional Reflection Comments -->
+            <div class="space-y-1.5">
+              <label for="telemetryFeedbackNotes" class="block text-xs font-medium text-ivory-300">
+                Qualitative Reflection / Research Notes <span class="text-ivory-400 font-light">(Optional)</span>
+              </label>
+              <textarea id="telemetryFeedbackNotes" rows="2" placeholder="Describe any notable moments where the narrative or audio shifted with your mood..." class="w-full rounded-xl bg-midnight-950/80 border border-ivory-300/15 px-3.5 py-2.5 text-xs text-ivory-100 placeholder-ivory-400/50 focus:outline-none focus:border-amber-450 transition-colors"></textarea>
+            </div>
+          </div>
+
+          <!-- Submission Controls & Privacy Guarantee -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2 border-t border-ivory-300/10">
+            <div class="flex items-center gap-2 text-[11px] text-ivory-400 font-light">
+              <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <span>100% Anonymous: No webcam frames, video, audio, or biometric templates are stored.</span>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+              <button id="downloadTelemetryBtn" type="button" class="px-4 py-2 rounded-xl border border-ivory-300/20 hover:border-ivory-300/40 text-xs text-ivory-200 transition-colors flex items-center gap-1.5" title="Download raw research telemetry JSON file">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Export Telemetry (.json)</span>
+              </button>
+
+              <button id="submitTelemetryBtn" type="button" class="px-5 py-2 rounded-xl border border-amber-450 bg-amber-450 hover:bg-amber-350 text-midnight-950 text-xs font-semibold uppercase tracking-wider transition-all flex items-center gap-2">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>Submit Telemetry</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="telemetryStatusToast" class="hidden text-center text-xs font-mono text-emerald-400 py-1">
+            ✓ Telemetry session data successfully recorded. Thank you for contributing to affective computing research!
+          </div>
+        </div>
+
         <!-- Complete Story Manuscript -->
         <article class="bg-midnight-900/40 border border-ivory-300/10 rounded-2xl p-6 sm:p-12 shadow-2xl space-y-8">
           <div class="text-center font-mono text-xs uppercase tracking-widest text-ivory-400 border-b border-ivory-300/10 pb-4">
@@ -854,6 +985,12 @@
           <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">4. Instant Hardware Teardown</h4>
           <p>
             When you click "Stop Camera", all active MediaStream tracks are explicitly terminated, shutting down camera hardware immediately.
+          </p>
+        </div>
+        <div class="space-y-1">
+          <h4 class="font-mono text-xs uppercase tracking-wider text-amber-350">5. Anonymous Research Telemetry</h4>
+          <p>
+            Session telemetry records only anonymous reading metrics (pace, aggregate emotion counts, and optional Likert ratings) for research purposes. No user identity, IP address, or biometric templates are ever recorded.
           </p>
         </div>
       </div>

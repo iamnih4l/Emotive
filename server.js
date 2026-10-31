@@ -6,6 +6,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
@@ -117,6 +118,83 @@ app.post('/api/generate-paragraph', async (req, res) => {
       error: 'Internal server error during story generation.',
       message: err.message
     });
+  }
+});
+
+/**
+ * POST /api/telemetry
+ * Records anonymous session telemetry and Likert ratings.
+ * Locally appends to telemetry/sessions.jsonl for research analysis.
+ */
+const TELEMETRY_DIR = path.join(__dirname, 'telemetry');
+const TELEMETRY_FILE = path.join(TELEMETRY_DIR, 'sessions.jsonl');
+
+app.post('/api/telemetry', async (req, res) => {
+  try {
+    const payload = req.body;
+    if (!payload || !payload.sessionId) {
+      return res.status(400).json({ error: 'Missing sessionId or empty payload.' });
+    }
+
+    const record = {
+      receivedAt: new Date().toISOString(),
+      sessionId: payload.sessionId,
+      timestamp: payload.timestamp || new Date().toISOString(),
+      readingMode: payload.readingMode || 'camera',
+      storyMetadata: payload.storyMetadata || {},
+      sessionTiming: payload.sessionTiming || {},
+      paragraphMetrics: payload.paragraphMetrics || [],
+      emotionDistribution: payload.emotionDistribution || {},
+      surveyRatings: payload.surveyRatings || {},
+      clientMeta: payload.clientMeta || {}
+    };
+
+    // Ensure telemetry directory exists
+    if (!fs.existsSync(TELEMETRY_DIR)) {
+      fs.mkdirSync(TELEMETRY_DIR, { recursive: true });
+    }
+
+    // Append JSON line
+    fs.appendFileSync(TELEMETRY_FILE, JSON.stringify(record) + '\n', 'utf8');
+    console.log(`[TELEMETRY_LOG] Session ${payload.sessionId} saved to telemetry/sessions.jsonl`);
+
+    return res.json({
+      ok: true,
+      sessionId: payload.sessionId,
+      message: 'Telemetry logged to local sessions.jsonl'
+    });
+  } catch (err) {
+    console.error('Error saving telemetry:', err);
+    return res.status(500).json({
+      error: 'Failed to record telemetry',
+      details: err.message
+    });
+  }
+});
+
+/**
+ * GET /api/telemetry
+ * Returns summary count of recorded research sessions.
+ */
+app.get('/api/telemetry', (req, res) => {
+  try {
+    if (!fs.existsSync(TELEMETRY_FILE)) {
+      return res.json({
+        service: 'EMOTIVE Local Telemetry Storage',
+        totalSessions: 0,
+        filePath: 'telemetry/sessions.jsonl'
+      });
+    }
+
+    const lines = fs.readFileSync(TELEMETRY_FILE, 'utf8').trim().split('\n').filter(Boolean);
+    return res.json({
+      service: 'EMOTIVE Local Telemetry Storage',
+      totalSessions: lines.length,
+      latestSessionId: lines.length > 0 ? JSON.parse(lines[lines.length - 1]).sessionId : null,
+      filePath: 'telemetry/sessions.jsonl'
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
 });
 

@@ -158,3 +158,28 @@ html, body {
   border-radius: 6px;
   background: rgba(9, 9, 13, 0.6);
 }
+
+/* Research Telemetry & Likert Scale */
+.likert-btn {
+  background: rgba(15, 16, 22, 0.6);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.likert-btn:hover {
+  background: rgba(212, 155, 67, 0.12);
+  border-color: rgba(212, 155, 67, 0.5);
+  color: #fbf9f5;
+  transform: translateY(-1px);
+}
+
+.likert-btn.selected {
+  background: rgba(212, 155, 67, 0.25) !important;
+  border-color: #d49b43 !important;
+  color: #fbf9f5 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 14px rgba(212, 155, 67, 0.3);
+  transform: translateY(-1px);
+}
+
