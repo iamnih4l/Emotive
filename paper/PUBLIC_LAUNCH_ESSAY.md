@@ -29,7 +29,7 @@ In live human storytelling, a speaker watches the listener's eyes, furrowed brow
 
 Live demo: https://emotive-omega.vercel.app/  
 GitHub: https://github.com/iamnih4l/Emotive  
-Paper / Preprint: Included in the repository under `/paper`.
+Paper / Preprint (DOI): https://doi.org/10.5281/zenodo.23843114 (Zenodo / CERN OpenAIRE)
 
 I'd love your feedback on the latency, the narrative pacing, and whether the emotional counterpoint felt subtle or noticeable!
 
@@ -71,7 +71,8 @@ Zero audio assets are streamed over the network.
 A custom 4-voice synthesizer uses the Web Audio API to cross-fade ambient pad voicings (Cmaj9, Am7, Dsus2, diminished drones) with resonant biquad filtering that harmonizes with your emotional state.
 
 **Tweet 6 (Paper + Links):**
-We've published the full research preprint paper and study protocol targeting ICIDS / ACM C&C in the repository!
+We've published the full research preprint paper and study protocol with CERN/Zenodo!
+DOI: https://doi.org/10.5281/zenodo.23843114
 
 Try it live: https://emotive-omega.vercel.app/
 GitHub: https://github.com/iamnih4l/Emotive

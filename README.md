@@ -9,6 +9,8 @@
 </p>
 
 <p align="center">
+  <a href="https://doi.org/10.5281/zenodo.23843114"><img src="https://img.shields.io/badge/DOI-10.5281%2Fzenodo.23843114-blue.svg?style=flat-square" alt="DOI" /></a>
+  <a href="https://zenodo.org/records/23843114"><img src="https://img.shields.io/badge/Preprint-Zenodo%20(CERN)-brightgreen.svg?style=flat-square" alt="Preprint on Zenodo" /></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-amber.svg?style=flat-square" alt="MIT License" /></a>
   <a href="https://github.com/iamnih4l/Emotive/actions"><img src="https://img.shields.io/badge/CI-Passing-emerald.svg?style=flat-square" alt="CI Status" /></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-18%20%7C%2020%20%7C%2022-blue.svg?style=flat-square" alt="Node Compatibility" /></a>
@@ -317,6 +319,30 @@ Emotive/
 ├── server.js                    # Node.js/Express server with rate limiting
 ├── vercel.json                  # Serverless deployment routing configuration
 └── README.md                    # Project documentation
+```
+
+---
+
+## 📄 Academic Research Paper & Citation
+
+EMOTIVE is published as an open-access research preprint on **Zenodo / CERN OpenAIRE**:
+
+> **Mohammed Nihal.** *"EMOTIVE: A Closed-Loop Affective Narrative System (CLANS) Using In-Browser Facial Blendshapes and Procedural Soundscapes."* Zenodo, 2026. **DOI:** [10.5281/zenodo.23843114](https://doi.org/10.5281/zenodo.23843114) — **Permanent Record:** [zenodo.org/records/23843114](https://zenodo.org/records/23843114)
+
+If you build upon or reference this architecture in your research, please cite:
+
+```bibtex
+@misc{nihal2026emotive,
+  author       = {Nihal, Mohammed},
+  title        = {{EMOTIVE: A Closed-Loop Affective Narrative System 
+                   (CLANS) Using In-Browser Facial Blendshapes and 
+                   Procedural Soundscapes}},
+  month        = nov,
+  year         = 2026,
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.23843114},
+  url          = {https://doi.org/10.5281/zenodo.23843114}
+}
 ```
 
 ---
